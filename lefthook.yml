@@ -1,0 +1,30 @@
+# DOCS: https://github.com/evilmartians/lefthook
+#
+# Lefthook configuration for git hooks
+
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{js,jsx,ts,tsx}"
+      run: pnpm lint:fix {staged_files}
+    format:
+      glob: "*.{js,jsx,ts,tsx,md,json,css}"
+      run: pnpm prettier --write {staged_files}
+    typecheck:
+      run: pnpm typecheck
+
+commit-msg:
+  commands:
+    commitlint:
+      run: |
+        # Simple commit message validation
+        commit_regex='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .{1,72}$'
+        if ! grep -qE "$commit_regex" {1}; then
+          echo "Invalid commit message format!"
+          echo "Format: <type>(<scope>): <subject>"
+          echo "Example: feat(auth): add login functionality"
+          echo ""
+          echo "Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+          exit 1
+        fi
