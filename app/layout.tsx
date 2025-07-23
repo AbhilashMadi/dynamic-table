@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-import "@/css/globals.css";
-import { FontMono, FontSans } from "@/lib/fonts";
 import { ThemeProvider } from "@/components/context/theme-provider";
+import { FontMono, FontSans } from "@/lib/fonts";
+import "@/css/globals.css";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,16 +17,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <body className={`${FontSans.variable} ${FontMono.variable} antialiased flex-center min-h-dvh`}>
+      <body className={`${FontSans.variable} ${FontMono.variable} flex-center min-h-dvh antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange>
           {children}
-        </body>
-      </ThemeProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

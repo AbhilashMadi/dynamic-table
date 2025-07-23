@@ -1,7 +1,7 @@
 /**
  * Employee ID Generator using hash-based approach
  * Generates unique IDs in format: EMP followed by 5 digits (e.g., EMP12345)
- * 
+ *
  * This approach provides:
  * - O(1) ID generation time
  * - Extremely low collision probability
@@ -33,7 +33,7 @@ export class EmployeeIdGenerator {
       const count = this.counter++;
 
       // Simple hash function with prime number multiplication
-      const hash = ((timestamp * 31) + (random * 17) + (count * 13)) % 100000;
+      const hash = (timestamp * 31 + random * 17 + count * 13) % 100000;
       const id = `EMP${String(Math.abs(hash)).padStart(5, "0")}`;
 
       if (!this.usedIds.has(id)) {

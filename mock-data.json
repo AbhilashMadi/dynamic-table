@@ -18,12 +18,7 @@
     "isActive": true,
     "performanceRating": 4.6,
     "manager": "Deborah Stewart",
-    "skills": [
-      "Customer Analytics",
-      "Communication",
-      "Retention",
-      "Zendesk"
-    ],
+    "skills": ["Customer Analytics", "Communication", "Retention", "Zendesk"],
     "projects": 20,
     "vacationDays": 10
   },
@@ -104,13 +99,7 @@
     "isActive": true,
     "performanceRating": 4.3,
     "manager": "Sarah Johnson",
-    "skills": [
-      "Node.js",
-      "JavaScript",
-      "AWS",
-      "Docker",
-      "Python"
-    ],
+    "skills": ["Node.js", "JavaScript", "AWS", "Docker", "Python"],
     "projects": 16,
     "vacationDays": 18
   },
@@ -162,12 +151,7 @@
     "isActive": true,
     "performanceRating": 3.9,
     "manager": "Deborah Stewart",
-    "skills": [
-      "Communication",
-      "SaaS",
-      "Retention",
-      "Onboarding"
-    ],
+    "skills": ["Communication", "SaaS", "Retention", "Onboarding"],
     "projects": 7,
     "vacationDays": 14
   },
@@ -190,11 +174,7 @@
     "isActive": true,
     "performanceRating": 4.2,
     "manager": "Kevin Miller",
-    "skills": [
-      "CSS",
-      "HTML",
-      "Wireframing"
-    ],
+    "skills": ["CSS", "HTML", "Wireframing"],
     "projects": 20,
     "vacationDays": 20
   },
@@ -247,12 +227,7 @@
     "isActive": true,
     "performanceRating": 3.5,
     "manager": "Director of Customer Success",
-    "skills": [
-      "Zendesk",
-      "Communication",
-      "Onboarding",
-      "Intercom"
-    ],
+    "skills": ["Zendesk", "Communication", "Onboarding", "Intercom"],
     "projects": 19,
     "vacationDays": 18
   },
@@ -303,13 +278,7 @@
     "isActive": true,
     "performanceRating": 4.7,
     "manager": "Kevin Miller",
-    "skills": [
-      "Sketch",
-      "Design Systems",
-      "Adobe XD",
-      "Prototyping",
-      "Figma"
-    ],
+    "skills": ["Sketch", "Design Systems", "Adobe XD", "Prototyping", "Figma"],
     "projects": 22,
     "vacationDays": 14
   },
@@ -359,12 +328,7 @@
     "isActive": true,
     "performanceRating": 4.7,
     "manager": "VP of Product",
-    "skills": [
-      "Scrum",
-      "Data Analysis",
-      "A/B Testing",
-      "Agile"
-    ],
+    "skills": ["Scrum", "Data Analysis", "A/B Testing", "Agile"],
     "projects": 10,
     "vacationDays": 12
   },
@@ -417,12 +381,7 @@
     "isActive": true,
     "performanceRating": 4.6,
     "manager": "General Counsel",
-    "skills": [
-      "Corporate Law",
-      "IP Law",
-      "Compliance",
-      "Contract Law"
-    ],
+    "skills": ["Corporate Law", "IP Law", "Compliance", "Contract Law"],
     "projects": 22,
     "vacationDays": 14
   },
@@ -558,11 +517,7 @@
     "isActive": true,
     "performanceRating": 4,
     "manager": "VP of Product",
-    "skills": [
-      "JIRA",
-      "Product Analytics",
-      "Market Research"
-    ],
+    "skills": ["JIRA", "Product Analytics", "Market Research"],
     "projects": 12,
     "vacationDays": 22
   },
@@ -644,11 +599,7 @@
     "isActive": true,
     "performanceRating": 3.9,
     "manager": "Emily Davis",
-    "skills": [
-      "Salesforce",
-      "SEO",
-      "Facebook Ads"
-    ],
+    "skills": ["Salesforce", "SEO", "Facebook Ads"],
     "projects": 21,
     "vacationDays": 20
   },
@@ -671,11 +622,7 @@
     "isActive": true,
     "performanceRating": 4.7,
     "manager": "VP of Product",
-    "skills": [
-      "Adobe XD",
-      "Wireframing",
-      "Illustrator"
-    ],
+    "skills": ["Adobe XD", "Wireframing", "Illustrator"],
     "projects": 15,
     "vacationDays": 16
   },
@@ -698,12 +645,7 @@
     "isActive": true,
     "performanceRating": 4.1,
     "manager": "David Wilson",
-    "skills": [
-      "Cold Calling",
-      "Salesforce",
-      "B2B Sales",
-      "Negotiation"
-    ],
+    "skills": ["Cold Calling", "Salesforce", "B2B Sales", "Negotiation"],
     "projects": 9,
     "vacationDays": 20
   },
@@ -900,11 +842,7 @@
     "isActive": false,
     "performanceRating": 3.5,
     "manager": "David Wilson",
-    "skills": [
-      "CRM",
-      "B2B Sales",
-      "Lead Generation"
-    ],
+    "skills": ["CRM", "B2B Sales", "Lead Generation"],
     "projects": 22,
     "vacationDays": 10
   },
@@ -927,12 +865,7 @@
     "isActive": true,
     "performanceRating": 4.8,
     "manager": "Sandra Nelson",
-    "skills": [
-      "Tableau",
-      "Financial Analysis",
-      "Forecasting",
-      "ERP"
-    ],
+    "skills": ["Tableau", "Financial Analysis", "Forecasting", "ERP"],
     "projects": 16,
     "vacationDays": 22
   },
@@ -955,12 +888,7 @@
     "isActive": true,
     "performanceRating": 4.5,
     "manager": "Sarah Johnson",
-    "skills": [
-      "Go",
-      "PostgreSQL",
-      "Java",
-      "TypeScript"
-    ],
+    "skills": ["Go", "PostgreSQL", "Java", "TypeScript"],
     "projects": 3,
     "vacationDays": 12
   },
@@ -1101,13 +1029,7 @@
     "isActive": true,
     "performanceRating": 3.7,
     "manager": "VP of Product",
-    "skills": [
-      "CSS",
-      "Photoshop",
-      "Figma",
-      "Prototyping",
-      "Wireframing"
-    ],
+    "skills": ["CSS", "Photoshop", "Figma", "Prototyping", "Wireframing"],
     "projects": 25,
     "vacationDays": 22
   },
@@ -1130,14 +1052,7 @@
     "isActive": true,
     "performanceRating": 4.5,
     "manager": "VP of Engineering",
-    "skills": [
-      "Python",
-      "Kubernetes",
-      "TDD",
-      "Redis",
-      "REST APIs",
-      "Agile"
-    ],
+    "skills": ["Python", "Kubernetes", "TDD", "Redis", "REST APIs", "Agile"],
     "projects": 4,
     "vacationDays": 14
   },
@@ -1160,14 +1075,7 @@
     "isActive": true,
     "performanceRating": 4.6,
     "manager": "Michael Chen",
-    "skills": [
-      "TDD",
-      "PostgreSQL",
-      "CI/CD",
-      "Redis",
-      "GraphQL",
-      "REST APIs"
-    ],
+    "skills": ["TDD", "PostgreSQL", "CI/CD", "Redis", "GraphQL", "REST APIs"],
     "projects": 12,
     "vacationDays": 12
   },
@@ -1220,13 +1128,7 @@
     "isActive": true,
     "performanceRating": 3.7,
     "manager": "VP of Product",
-    "skills": [
-      "CSS",
-      "Design Systems",
-      "Prototyping",
-      "Sketch",
-      "Photoshop"
-    ],
+    "skills": ["CSS", "Design Systems", "Prototyping", "Sketch", "Photoshop"],
     "projects": 10,
     "vacationDays": 16
   },
@@ -1249,11 +1151,7 @@
     "isActive": true,
     "performanceRating": 3.9,
     "manager": "VP of Product",
-    "skills": [
-      "Market Research",
-      "Product Strategy",
-      "Scrum"
-    ],
+    "skills": ["Market Research", "Product Strategy", "Scrum"],
     "projects": 23,
     "vacationDays": 16
   },
@@ -1395,12 +1293,7 @@
     "isActive": true,
     "performanceRating": 4.8,
     "manager": "VP of Product",
-    "skills": [
-      "Wireframing",
-      "Figma",
-      "Adobe XD",
-      "User Research"
-    ],
+    "skills": ["Wireframing", "Figma", "Adobe XD", "User Research"],
     "projects": 12,
     "vacationDays": 10
   },
@@ -1423,12 +1316,7 @@
     "isActive": true,
     "performanceRating": 3.6,
     "manager": "VP of Product",
-    "skills": [
-      "Roadmapping",
-      "JIRA",
-      "A/B Testing",
-      "Agile"
-    ],
+    "skills": ["Roadmapping", "JIRA", "A/B Testing", "Agile"],
     "projects": 29,
     "vacationDays": 16
   }
