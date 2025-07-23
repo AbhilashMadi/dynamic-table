@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import "@/css/globals.css";
 import { FontMono, FontSans } from "@/lib/fonts";
+import { ThemeProvider } from "@/components/context/theme-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,10 +15,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${FontSans.variable} ${FontMono.variable} antialiased`}>
-        {children}
-      </body>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <body className={`${FontSans.variable} ${FontMono.variable} antialiased flex-center min-h-dvh`}>
+          {children}
+        </body>
+      </ThemeProvider>
     </html>
   );
 }
