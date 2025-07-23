@@ -1,4 +1,4 @@
-import { Inter, Space_Mono } from "next/font/google";
+import { Inter, Sometype_Mono } from "next/font/google";
 
 export const FontSans = Inter({
   variable: "--font-sans",
@@ -6,7 +6,7 @@ export const FontSans = Inter({
   display: "swap",
 });
 
-export const FontMono = Space_Mono({
+export const FontMono = Sometype_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "700"],

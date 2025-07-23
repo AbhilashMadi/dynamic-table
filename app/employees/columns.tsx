@@ -50,7 +50,7 @@ export const columns: ColumnDef<Employee>[] = [
     accessorKey: "id",
     header: "ID",
     cell: ({ row }) => (
-      <div className="font-mono text-xs">{row.getValue("id")}</div>
+      <code className="text-xs bg-accent p-1 rounded">{row.getValue("id")}</code>
     ),
   },
   {
@@ -108,7 +108,10 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "phone",
     header: "Phone",
-    cell: ({ row }) => <div className="text-sm">{row.getValue("phone")}</div>,
+    cell: ({ row }) => {
+      const cellNum: string = row.getValue("phone");
+      return <a className="text-primary hover:underline" href={`tel:${cellNum}`}>{cellNum}</a>
+    },
   },
   {
     accessorKey: "department",
