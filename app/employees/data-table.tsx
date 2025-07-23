@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -23,6 +22,12 @@ import {
   Upload,
 } from "lucide-react";
 
+import * as React from "react";
+
+import { useTheme } from "next-themes";
+
+import RestoreIcon, { MoonIcon, SunIcon } from "@/components/icons";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -37,6 +42,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -45,15 +51,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -61,14 +58,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { Employee, Department } from "@/schemas/employee-schema";
-import { columnPresets } from "./columns";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { TabsList, Tabs, TabsTrigger } from "@/components/ui/tabs";
-import RestoreIcon, { SunIcon, MoonIcon } from "@/components/icons";
-import { useTheme } from "next-themes";
+import { Department, Employee } from "@/schemas/employee-schema";
+
+import { columnPresets } from "./columns";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -234,21 +237,21 @@ export function DataTable<TData extends Employee, TValue>({
                     Filter employees by various criteria
                   </SheetDescription>
                 </SheetHeader>
-                <div className="space-y-6 mt-6">
+                <div className="mt-6 space-y-6">
                   {/* Department filter */}
                   <div className="space-y-2">
                     <Label>Departments</Label>
                     <div className="space-y-2">
                       {departments.map((dept) => (
-                        <div
-                          key={dept}
-                          className="flex items-center space-x-2"
-                        >
+                        <div key={dept} className="flex items-center space-x-2">
                           <Checkbox
                             checked={departmentFilter.includes(dept)}
                             onCheckedChange={(checked) => {
                               if (checked) {
-                                setDepartmentFilter([...departmentFilter, dept]);
+                                setDepartmentFilter([
+                                  ...departmentFilter,
+                                  dept,
+                                ]);
                               } else {
                                 setDepartmentFilter(
                                   departmentFilter.filter((d) => d !== dept)
@@ -265,7 +268,10 @@ export function DataTable<TData extends Employee, TValue>({
                   {/* Status filter */}
                   <div className="space-y-2">
                     <Label>Status</Label>
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <Select
+                      value={statusFilter}
+                      onValueChange={setStatusFilter}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -280,7 +286,7 @@ export function DataTable<TData extends Employee, TValue>({
                   {/* Salary range */}
                   <div className="space-y-2">
                     <Label>Salary Range</Label>
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <div className="text-muted-foreground flex items-center justify-between text-sm">
                       <span>${salaryRange[0].toLocaleString()}</span>
                       <span>${salaryRange[1].toLocaleString()}</span>
                     </div>
@@ -297,7 +303,7 @@ export function DataTable<TData extends Employee, TValue>({
                   {/* Rating range */}
                   <div className="space-y-2">
                     <Label>Performance Rating</Label>
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <div className="text-muted-foreground flex items-center justify-between text-sm">
                       <span>{ratingRange[0].toFixed(1)}</span>
                       <span>{ratingRange[1].toFixed(1)}</span>
                     </div>
@@ -475,8 +481,8 @@ export function DataTable<TData extends Employee, TValue>({
 
         {/* Selection info */}
         {selectedCount > 0 && (
-          <div className="flex items-center justify-between bg-muted px-4 py-2 rounded-lg">
-            <div className="text-sm text-muted-foreground">
+          <div className="bg-muted flex items-center justify-between rounded-lg px-4 py-2">
+            <div className="text-muted-foreground text-sm">
               {selectedCount} of {totalCount} row(s) selected
             </div>
             <div className="flex items-center gap-2">
@@ -501,50 +507,52 @@ export function DataTable<TData extends Employee, TValue>({
           salaryRange[1] < 300000 ||
           ratingRange[0] > 0 ||
           ratingRange[1] < 5) && (
-            <div className="flex flex-wrap gap-2">
-              {departmentFilter.map((dept) => (
-                <Badge
-                  key={dept}
-                  variant="secondary"
-                  className="cursor-pointer"
-                  onClick={() =>
-                    setDepartmentFilter(departmentFilter.filter((d) => d !== dept))
-                  }
-                >
-                  {dept} ×
-                </Badge>
-              ))}
-              {statusFilter !== "all" && (
-                <Badge
-                  variant="secondary"
-                  className="cursor-pointer"
-                  onClick={() => setStatusFilter("all")}
-                >
-                  Status: {statusFilter} ×
-                </Badge>
-              )}
-              {(salaryRange[0] > 0 || salaryRange[1] < 300000) && (
-                <Badge
-                  variant="secondary"
-                  className="cursor-pointer"
-                  onClick={() => setSalaryRange([0, 300000])}
-                >
-                  Salary: ${salaryRange[0].toLocaleString()} - $
-                  {salaryRange[1].toLocaleString()} ×
-                </Badge>
-              )}
-              {(ratingRange[0] > 0 || ratingRange[1] < 5) && (
-                <Badge
-                  variant="secondary"
-                  className="cursor-pointer"
-                  onClick={() => setRatingRange([0, 5])}
-                >
-                  Rating: {ratingRange[0].toFixed(1)} - {ratingRange[1].toFixed(1)}{" "}
-                  ×
-                </Badge>
-              )}
-            </div>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {departmentFilter.map((dept) => (
+              <Badge
+                key={dept}
+                variant="secondary"
+                className="cursor-pointer"
+                onClick={() =>
+                  setDepartmentFilter(
+                    departmentFilter.filter((d) => d !== dept)
+                  )
+                }
+              >
+                {dept} ×
+              </Badge>
+            ))}
+            {statusFilter !== "all" && (
+              <Badge
+                variant="secondary"
+                className="cursor-pointer"
+                onClick={() => setStatusFilter("all")}
+              >
+                Status: {statusFilter} ×
+              </Badge>
+            )}
+            {(salaryRange[0] > 0 || salaryRange[1] < 300000) && (
+              <Badge
+                variant="secondary"
+                className="cursor-pointer"
+                onClick={() => setSalaryRange([0, 300000])}
+              >
+                Salary: ${salaryRange[0].toLocaleString()} - $
+                {salaryRange[1].toLocaleString()} ×
+              </Badge>
+            )}
+            {(ratingRange[0] > 0 || ratingRange[1] < 5) && (
+              <Badge
+                variant="secondary"
+                className="cursor-pointer"
+                onClick={() => setRatingRange([0, 5])}
+              >
+                Rating: {ratingRange[0].toFixed(1)} -{" "}
+                {ratingRange[1].toFixed(1)} ×
+              </Badge>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Table */}
@@ -559,9 +567,9 @@ export function DataTable<TData extends Employee, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
@@ -601,12 +609,15 @@ export function DataTable<TData extends Employee, TValue>({
 
       {/* Pagination */}
       <div className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
-          Showing {table.getState().pagination.pageIndex *
-            table.getState().pagination.pageSize + 1} to{" "}
+        <div className="text-muted-foreground text-sm">
+          Showing{" "}
+          {table.getState().pagination.pageIndex *
+            table.getState().pagination.pageSize +
+            1}{" "}
+          to{" "}
           {Math.min(
             (table.getState().pagination.pageIndex + 1) *
-            table.getState().pagination.pageSize,
+              table.getState().pagination.pageSize,
             totalCount
           )}{" "}
           of {totalCount} results

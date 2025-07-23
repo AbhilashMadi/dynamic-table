@@ -1,15 +1,16 @@
 "use client";
 
-import { columns } from "./columns";
-import { DataTable } from "./data-table";
 import mockData from "@/mock-data.json";
 import { Employee } from "@/schemas/employee-schema";
+
+import { columns } from "./columns";
+import { DataTable } from "./data-table";
 
 export default function EmployeesPage() {
   const employees = mockData as Employee[];
 
   return (
-    <main className="min-h-dvh flex-center">
+    <main className="flex-center min-h-dvh">
       <DataTable
         columns={columns}
         data={employees}

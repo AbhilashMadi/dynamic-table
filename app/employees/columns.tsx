@@ -3,6 +3,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
+import {
+  CopyIcon,
+  DeleteIcon,
+  DetailsIcon,
+  EditIcon,
+} from "@/components/icons";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -13,10 +20,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Employee } from "@/schemas/employee-schema";
 import { cn } from "@/lib/utils";
-import { CopyIcon, DeleteIcon, DetailsIcon, EditIcon } from "@/components/icons";
+import { Employee } from "@/schemas/employee-schema";
 
 export const columns: ColumnDef<Employee>[] = [
   {
@@ -121,17 +126,27 @@ export const columns: ColumnDef<Employee>[] = [
     cell: ({ row }) => {
       const department = row.getValue("department") as string;
       const departmentColors: Record<string, string> = {
-        Engineering: "bg-blue-500/10 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300",
-        Marketing: "bg-purple-500/10 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300",
-        Sales: "bg-green-500/10 text-green-700 dark:bg-green-500/20 dark:text-green-300",
+        Engineering:
+          "bg-blue-500/10 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300",
+        Marketing:
+          "bg-purple-500/10 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300",
+        Sales:
+          "bg-green-500/10 text-green-700 dark:bg-green-500/20 dark:text-green-300",
         HR: "bg-yellow-500/10 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-300",
-        Finance: "bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300",
-        Design: "bg-pink-500/10 text-pink-700 dark:bg-pink-500/20 dark:text-pink-300",
-        Product: "bg-orange-500/10 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300",
-        Operations: "bg-zinc-500/10 text-zinc-700 dark:bg-zinc-500/20 dark:text-zinc-300",
-        Legal: "bg-red-500/10 text-red-700 dark:bg-red-500/20 dark:text-red-300",
-        "Customer Success": "bg-teal-500/10 text-teal-700 dark:bg-teal-500/20 dark:text-teal-300",
-        Security: "bg-slate-500/10 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300",
+        Finance:
+          "bg-indigo-500/10 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300",
+        Design:
+          "bg-pink-500/10 text-pink-700 dark:bg-pink-500/20 dark:text-pink-300",
+        Product:
+          "bg-orange-500/10 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300",
+        Operations:
+          "bg-zinc-500/10 text-zinc-700 dark:bg-zinc-500/20 dark:text-zinc-300",
+        Legal:
+          "bg-red-500/10 text-red-700 dark:bg-red-500/20 dark:text-red-300",
+        "Customer Success":
+          "bg-teal-500/10 text-teal-700 dark:bg-teal-500/20 dark:text-teal-300",
+        Security:
+          "bg-slate-500/10 text-slate-700 dark:bg-slate-500/20 dark:text-slate-300",
       };
       return (
         <Badge
@@ -326,11 +341,17 @@ export const columns: ColumnDef<Employee>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(employee.id)}
             >
-              <CopyIcon />Copy employee ID
+              <CopyIcon />
+              Copy employee ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem><DetailsIcon />View details</DropdownMenuItem>
-            <DropdownMenuItem><EditIcon /> Edit employee</DropdownMenuItem>
+            <DropdownMenuItem>
+              <DetailsIcon />
+              View details
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <EditIcon /> Edit employee
+            </DropdownMenuItem>
             <DropdownMenuItem className="text-red-600">
               <DeleteIcon /> Delete employee
             </DropdownMenuItem>

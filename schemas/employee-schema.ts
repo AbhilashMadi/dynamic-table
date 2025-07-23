@@ -25,8 +25,12 @@ export const EmployeeSchema = z.object({
   department: DepartmentSchema,
   position: z.string().min(1, "Position is required"),
   salary: z.number().int().positive("Salary must be a positive number"),
-  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
-  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
+  startDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
+  birthDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
   address: z.string().min(1, "Address is required"),
   city: z.string().min(1, "City is required"),
   state: z.string().length(2, "State must be 2-letter abbreviation"),
@@ -37,7 +41,11 @@ export const EmployeeSchema = z.object({
   manager: z.string().min(1, "Manager is required"),
   skills: z.array(z.string()).min(1, "At least one skill is required"),
   projects: z.number().int().min(0, "Projects count must be non-negative"),
-  vacationDays: z.number().int().min(0).max(30, "Vacation days must be between 0 and 30"),
+  vacationDays: z
+    .number()
+    .int()
+    .min(0)
+    .max(30, "Vacation days must be between 0 and 30"),
 });
 
 // Type inference
