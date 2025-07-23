@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className={`${FontSans.variable} ${FontMono.variable} flex-center min-h-dvh antialiased`}
+        className={`${FontSans.variable} ${FontMono.variable} min-h-dvh antialiased`}
       >
         <ThemeProvider
           attribute="class"
