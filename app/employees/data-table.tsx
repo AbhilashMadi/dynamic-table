@@ -70,6 +70,15 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { Department, Employee } from "@/schemas/employee-schema";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 import { columnPresets } from "./columns";
 
@@ -292,7 +301,7 @@ export function DataTable<TData extends Employee, TValue>({
                     </div>
                     <Slider
                       value={salaryRange}
-                      onValueChange={setSalaryRange}
+                      onValueChange={(value) => setSalaryRange(value as [number, number])}
                       min={0}
                       max={300000}
                       step={5000}
@@ -309,7 +318,7 @@ export function DataTable<TData extends Employee, TValue>({
                     </div>
                     <Slider
                       value={ratingRange}
-                      onValueChange={setRatingRange}
+                      onValueChange={(value) => setRatingRange(value as [number, number])}
                       min={0}
                       max={5}
                       step={0.1}
@@ -507,52 +516,52 @@ export function DataTable<TData extends Employee, TValue>({
           salaryRange[1] < 300000 ||
           ratingRange[0] > 0 ||
           ratingRange[1] < 5) && (
-          <div className="flex flex-wrap gap-2">
-            {departmentFilter.map((dept) => (
-              <Badge
-                key={dept}
-                variant="secondary"
-                className="cursor-pointer"
-                onClick={() =>
-                  setDepartmentFilter(
-                    departmentFilter.filter((d) => d !== dept)
-                  )
-                }
-              >
-                {dept} ×
-              </Badge>
-            ))}
-            {statusFilter !== "all" && (
-              <Badge
-                variant="secondary"
-                className="cursor-pointer"
-                onClick={() => setStatusFilter("all")}
-              >
-                Status: {statusFilter} ×
-              </Badge>
-            )}
-            {(salaryRange[0] > 0 || salaryRange[1] < 300000) && (
-              <Badge
-                variant="secondary"
-                className="cursor-pointer"
-                onClick={() => setSalaryRange([0, 300000])}
-              >
-                Salary: ${salaryRange[0].toLocaleString()} - $
-                {salaryRange[1].toLocaleString()} ×
-              </Badge>
-            )}
-            {(ratingRange[0] > 0 || ratingRange[1] < 5) && (
-              <Badge
-                variant="secondary"
-                className="cursor-pointer"
-                onClick={() => setRatingRange([0, 5])}
-              >
-                Rating: {ratingRange[0].toFixed(1)} -{" "}
-                {ratingRange[1].toFixed(1)} ×
-              </Badge>
-            )}
-          </div>
-        )}
+            <div className="flex flex-wrap gap-2">
+              {departmentFilter.map((dept) => (
+                <Badge
+                  key={dept}
+                  variant="secondary"
+                  className="cursor-pointer"
+                  onClick={() =>
+                    setDepartmentFilter(
+                      departmentFilter.filter((d) => d !== dept)
+                    )
+                  }
+                >
+                  {dept} ×
+                </Badge>
+              ))}
+              {statusFilter !== "all" && (
+                <Badge
+                  variant="secondary"
+                  className="cursor-pointer"
+                  onClick={() => setStatusFilter("all")}
+                >
+                  Status: {statusFilter} ×
+                </Badge>
+              )}
+              {(salaryRange[0] > 0 || salaryRange[1] < 300000) && (
+                <Badge
+                  variant="secondary"
+                  className="cursor-pointer"
+                  onClick={() => setSalaryRange([0, 300000])}
+                >
+                  Salary: ${salaryRange[0].toLocaleString()} - $
+                  {salaryRange[1].toLocaleString()} ×
+                </Badge>
+              )}
+              {(ratingRange[0] > 0 || ratingRange[1] < 5) && (
+                <Badge
+                  variant="secondary"
+                  className="cursor-pointer"
+                  onClick={() => setRatingRange([0, 5])}
+                >
+                  Rating: {ratingRange[0].toFixed(1)} -{" "}
+                  {ratingRange[1].toFixed(1)} ×
+                </Badge>
+              )}
+            </div>
+          )}
       </div>
 
       {/* Table */}
@@ -567,9 +576,9 @@ export function DataTable<TData extends Employee, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
@@ -617,7 +626,7 @@ export function DataTable<TData extends Employee, TValue>({
           to{" "}
           {Math.min(
             (table.getState().pagination.pageIndex + 1) *
-              table.getState().pagination.pageSize,
+            table.getState().pagination.pageSize,
             totalCount
           )}{" "}
           of {totalCount} results
@@ -640,40 +649,75 @@ export function DataTable<TData extends Employee, TValue>({
               ))}
             </SelectContent>
           </Select>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              First
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              Last
-            </Button>
-          </div>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => table.previousPage()}
+                  className={cn(
+                    !table.getCanPreviousPage() && "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
+
+              {(() => {
+                const currentPage = table.getState().pagination.pageIndex;
+                const totalPages = table.getPageCount();
+                const delta = 2;
+                const range: number[] = [];
+                const rangeWithDots: (number | string)[] = [];
+                let l: number | undefined;
+
+                for (let i = 1; i <= totalPages; i++) {
+                  if (i === 1 || i === totalPages || (i >= currentPage - delta + 1 && i <= currentPage + delta + 1)) {
+                    range.push(i);
+                  }
+                }
+
+                range.forEach((i) => {
+                  if (l) {
+                    if (i - l === 2) {
+                      rangeWithDots.push(l + 1);
+                    } else if (i - l !== 1) {
+                      rangeWithDots.push('...');
+                    }
+                  }
+                  rangeWithDots.push(i);
+                  l = i;
+                });
+
+                return rangeWithDots.map((i, index) => {
+                  if (i === '...') {
+                    return (
+                      <PaginationItem key={`ellipsis-${index}`}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    );
+                  }
+
+                  return (
+                    <PaginationItem key={i}>
+                      <PaginationLink
+                        onClick={() => table.setPageIndex(Number(i) - 1)}
+                        isActive={currentPage === Number(i) - 1}
+                      >
+                        {i}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                });
+              })()}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => table.nextPage()}
+                  className={cn(
+                    !table.getCanNextPage() && "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
     </div>
