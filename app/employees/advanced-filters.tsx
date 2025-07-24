@@ -84,7 +84,9 @@ export function AdvancedFilters({
         </div>
         <Slider
           value={salaryRange}
-          onValueChange={(value) => onSalaryRangeChange(value as [number, number])}
+          onValueChange={(value) =>
+            onSalaryRangeChange(value as [number, number])
+          }
           min={0}
           max={300000}
           step={5000}
@@ -100,7 +102,9 @@ export function AdvancedFilters({
         </div>
         <Slider
           value={ratingRange}
-          onValueChange={(value) => onRatingRangeChange(value as [number, number])}
+          onValueChange={(value) =>
+            onRatingRangeChange(value as [number, number])
+          }
           min={0}
           max={5}
           step={0.1}

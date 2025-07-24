@@ -1,14 +1,15 @@
 import {
   ColumnDef,
+  SortingState,
+  VisibilityState,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
-  VisibilityState,
 } from "@tanstack/react-table";
-import { useState, useEffect } from "react";
+
+import { useEffect, useState } from "react";
 
 import { columnPresets } from "./columns";
 
@@ -38,10 +39,10 @@ export function useTableState<TData, TValue = any>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onSortingChange: setSorting,
-    onColumnFiltersChange: () => { },
+    onColumnFiltersChange: () => {},
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onGlobalFilterChange: () => { },
+    onGlobalFilterChange: () => {},
     globalFilterFn: "includesString",
     state: {
       sorting,

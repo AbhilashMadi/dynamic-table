@@ -146,9 +146,7 @@ export class EmployeeService {
         const rows = employees.map((emp) =>
           Object.values(emp)
             .map((val) =>
-              typeof val === "string" && val.includes(",")
-                ? `"${val}"`
-                : val
+              typeof val === "string" && val.includes(",") ? `"${val}"` : val
             )
             .join(",")
         );
@@ -160,9 +158,7 @@ export class EmployeeService {
         // For now, we'll return CSV format for Excel
         // In a real app, you'd use a library like xlsx
         const headers = Object.keys(employees[0]).join("\t");
-        const rows = employees.map((emp) =>
-          Object.values(emp).join("\t")
-        );
+        const rows = employees.map((emp) => Object.values(emp).join("\t"));
         const tsv = [headers, ...rows].join("\n");
         return new Blob([tsv], { type: "application/vnd.ms-excel" });
 

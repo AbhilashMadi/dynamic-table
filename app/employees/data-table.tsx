@@ -1,6 +1,7 @@
 "use client";
 
 import { ColumnDef, flexRender } from "@tanstack/react-table";
+
 import * as React from "react";
 
 import {
@@ -150,9 +151,9 @@ export function DataTable<TData extends Employee, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}

@@ -9,8 +9,10 @@ import {
   Settings2,
   Upload,
 } from "lucide-react";
-import { useTheme } from "next-themes";
+
 import { useEffect, useState } from "react";
+
+import { useTheme } from "next-themes";
 
 import RestoreIcon, { MoonIcon, SunIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -148,7 +150,7 @@ export function TableToolbar({
         ) : (
           <div className="h-9 w-[150px]" />
         )}
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">

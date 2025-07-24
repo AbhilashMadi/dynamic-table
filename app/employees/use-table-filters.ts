@@ -1,5 +1,6 @@
 import { ColumnFiltersState } from "@tanstack/react-table";
-import { useState, useEffect } from "react";
+
+import { useEffect, useState } from "react";
 
 import { Department } from "@/schemas/employee-schema";
 
@@ -37,9 +38,7 @@ export function useTableFilters(): UseTableFiltersReturn {
   const [globalFilter, setGlobalFilter] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [salaryRange, setSalaryRange] = useState<[number, number]>([
-    0, 300000,
-  ]);
+  const [salaryRange, setSalaryRange] = useState<[number, number]>([0, 300000]);
   const [ratingRange, setRatingRange] = useState<[number, number]>([0, 5]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
