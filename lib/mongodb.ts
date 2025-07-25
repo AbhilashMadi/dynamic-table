@@ -1,14 +1,14 @@
 /**
  * MongoDB Connection Module
- * 
+ *
  * This module provides a singleton connection to MongoDB using Mongoose.
- * It implements connection caching to prevent multiple connections in 
+ * It implements connection caching to prevent multiple connections in
  * serverless environments like Vercel, where each API route invocation
  * could potentially create a new connection.
  */
+import mongoose from "mongoose";
 
-import mongoose from 'mongoose';
-import { env } from '@/env';
+import { env } from "@/env";
 
 // Environment variables validated by @t3-oss/env-nextjs
 const MONGODB_URL = env.MONGODB_URL;
@@ -26,9 +26,9 @@ if (!cached) cached = global.mongoose = { conn: null, promise: null };
 
 /**
  * Establishes a connection to MongoDB
- * 
+ *
  * @returns Promise<mongoose.Connection> - The active MongoDB connection
- * 
+ *
  * Features:
  * - Connection pooling with configurable min/max pool sizes
  * - Automatic retry logic with timeout configurations
@@ -47,26 +47,26 @@ async function connectDB(): Promise<mongoose.Connection> {
       // Specify the database name
       dbName: DB_NAME,
       // Connection pool configuration
-      maxPoolSize: 10,        // Maximum number of sockets the driver will keep open
-      minPoolSize: 5,         // Minimum number of sockets to keep open
+      maxPoolSize: 10, // Maximum number of sockets the driver will keep open
+      minPoolSize: 5, // Minimum number of sockets to keep open
       // Timeout configurations
       socketTimeoutMS: 45000, // How long to wait for a response from the server
       serverSelectionTimeoutMS: 5000, // How long to wait to find an available server
-      maxIdleTimeMS: 10000,   // How long a connection can remain idle before being closed
+      maxIdleTimeMS: 10000, // How long a connection can remain idle before being closed
     };
 
     // Disable strict query mode for flexible schema queries
-    mongoose.set('strictQuery', false);
+    mongoose.set("strictQuery", false);
 
     // Create connection promise with error handling
     cached!.promise = mongoose
       .connect(MONGODB_URL, opts)
       .then((mongoose) => {
-        console.log('MongoDB connected successfully');
+        console.log("MongoDB connected successfully");
         return mongoose.connection;
       })
       .catch((error) => {
-        console.error('MongoDB connection error:', error);
+        console.error("MongoDB connection error:", error);
         // Clear promise cache on error to allow retry
         cached!.promise = null;
         throw error;
@@ -91,18 +91,18 @@ async function connectDB(): Promise<mongoose.Connection> {
  */
 
 // Emitted when Mongoose successfully connects to MongoDB
-mongoose.connection.on('connected', () => {
-  console.log('MongoDB connection established');
+mongoose.connection.on("connected", () => {
+  console.log("MongoDB connection established");
 });
 
 // Emitted when Mongoose encounters a connection error
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err);
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
 });
 
 // Emitted when Mongoose loses connection to MongoDB
-mongoose.connection.on('disconnected', () => {
-  console.log('MongoDB disconnected');
+mongoose.connection.on("disconnected", () => {
+  console.log("MongoDB disconnected");
 });
 
 /**
@@ -110,11 +110,10 @@ mongoose.connection.on('disconnected', () => {
  * Ensures the MongoDB connection is properly closed when the application terminates
  * This prevents connection leaks and ensures clean shutdown
  */
-process.on('SIGINT', async () => {
+process.on("SIGINT", async () => {
   await mongoose.connection.close();
-  console.log('MongoDB connection closed through app termination');
+  console.log("MongoDB connection closed through app termination");
   process.exit(0);
 });
 
 export default connectDB;
-
