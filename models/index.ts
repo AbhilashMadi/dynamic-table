@@ -4,4 +4,4 @@ export {
   type IEmployeeModel,
   type EmployeeInput,
   employeeValidationSchema,
-} from './employee.model';
+} from "./employee.model";
