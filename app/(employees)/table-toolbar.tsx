@@ -61,7 +61,7 @@ export function TableToolbar({
   }, []);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between gap-2">
       <div className="flex items-center gap-2">
         <Input
           placeholder="Search all columns..."
@@ -69,8 +69,9 @@ export function TableToolbar({
           onChange={(event) => onGlobalFilterChange(event.target.value)}
           className="w-64"
         />
-        <QueryBuilder />
       </div>
+
+      <QueryBuilder />
 
       <div className="flex items-center gap-2">
         {mounted ? (
