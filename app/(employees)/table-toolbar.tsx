@@ -5,16 +5,15 @@ import {
   Download,
   Filter,
   Plus,
-  RefreshCw,
   Settings2,
-  Upload,
+  Upload
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
 
 import { useTheme } from "next-themes";
 
-import RestoreIcon, { MoonIcon, SunIcon } from "@/components/icons";
+import RestoreIcon, { MoonIcon, SpinnerIcon, SunIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -37,7 +36,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
 
 import { AdvancedFilters } from "./advanced-filters";
 
@@ -253,11 +251,8 @@ export function TableToolbar({
             variant="outline"
             size="sm"
             onClick={onRefresh}
-            disabled={isLoading}
-          >
-            <RefreshCw
-              className={cn("mr-2 h-4 w-4", isLoading && "animate-spin")}
-            />
+            disabled={isLoading}>
+            {isLoading && <SpinnerIcon />}
             Refresh
           </Button>
         )}
