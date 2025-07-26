@@ -3,7 +3,6 @@
 import {
   ChevronDown,
   Download,
-  Filter,
   Plus,
   Settings2,
   Upload
@@ -27,40 +26,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { AdvancedFilters } from "./advanced-filters";
+import QueryBuilder from "./query-builder";
 
 interface TableToolbarProps {
   globalFilter: string;
   onGlobalFilterChange: (value: string) => void;
   viewPreset: string;
   onViewPresetChange: (value: string) => void;
-  filterOpen: boolean;
-  onFilterOpenChange: (open: boolean) => void;
   table: any;
   onAddNew?: () => void;
   onExport?: (format: "csv" | "json" | "excel") => void;
   onImport?: (file: File) => void;
   onRefresh?: () => void;
   isLoading?: boolean;
-  departmentFilter: string[];
-  onDepartmentFilterChange: (value: string[]) => void;
-  statusFilter: string;
-  onStatusFilterChange: (value: string) => void;
-  salaryRange: [number, number];
-  onSalaryRangeChange: (value: [number, number]) => void;
-  ratingRange: [number, number];
-  onRatingRangeChange: (value: [number, number]) => void;
-  onClearAllFilters: () => void;
 }
 
 export function TableToolbar({
@@ -68,23 +48,12 @@ export function TableToolbar({
   onGlobalFilterChange,
   viewPreset,
   onViewPresetChange,
-  filterOpen,
-  onFilterOpenChange,
   table,
   onAddNew,
   onExport,
   onImport,
   onRefresh,
   isLoading = false,
-  departmentFilter,
-  onDepartmentFilterChange,
-  statusFilter,
-  onStatusFilterChange,
-  salaryRange,
-  onSalaryRangeChange,
-  ratingRange,
-  onRatingRangeChange,
-  onClearAllFilters,
 }: TableToolbarProps) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -102,32 +71,7 @@ export function TableToolbar({
           onChange={(event) => onGlobalFilterChange(event.target.value)}
           className="w-64"
         />
-        <Sheet open={filterOpen} onOpenChange={onFilterOpenChange}>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Filter className="h-4 w-4" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Advanced Filters</SheetTitle>
-              <SheetDescription>
-                Filter employees by various criteria
-              </SheetDescription>
-            </SheetHeader>
-            <AdvancedFilters
-              departmentFilter={departmentFilter}
-              onDepartmentFilterChange={onDepartmentFilterChange}
-              statusFilter={statusFilter}
-              onStatusFilterChange={onStatusFilterChange}
-              salaryRange={salaryRange}
-              onSalaryRangeChange={onSalaryRangeChange}
-              ratingRange={ratingRange}
-              onRatingRangeChange={onRatingRangeChange}
-              onClearAllFilters={onClearAllFilters}
-            />
-          </SheetContent>
-        </Sheet>
+        <QueryBuilder />
       </div>
 
       <div className="flex items-center gap-2">

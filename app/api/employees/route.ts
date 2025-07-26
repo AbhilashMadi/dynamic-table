@@ -22,6 +22,8 @@ import {
   type EmployeeInput,
   employeeValidationSchema,
 } from "@/models";
+import { applyFilters, applySorting } from "@/lib/api-filters";
+import { ActiveFilter } from "@/lib/filters";
 
 /**
  * Query parameters schema for GET requests
@@ -39,6 +41,7 @@ const querySchema = z.object({
     .enum(["firstName", "lastName", "salary", "startDate", "department"])
     .default("lastName"),
   sortOrder: z.enum(["asc", "desc"]).default("asc"),
+  filters: z.string().optional(), // JSON string of ActiveFilter[]
 });
 
 /**
@@ -85,18 +88,40 @@ export async function GET(request: NextRequest) {
     const sortQuery: any = {};
     sortQuery[query.sortBy] = sortOrder;
 
+    // Parse custom filters if provided
+    let customFilters: ActiveFilter[] = [];
+    if (query.filters) {
+      try {
+        customFilters = JSON.parse(query.filters) as ActiveFilter[];
+      } catch (error) {
+        console.error('Failed to parse custom filters:', error);
+      }
+    }
+
     const skip = (query.page - 1) * query.limit;
 
-    const [employees, total] = await Promise.all([
-      Employee.find(filters)
-        .sort(sortQuery)
-        .skip(skip)
-        .limit(query.limit)
-        .lean(),
-      Employee.countDocuments(filters),
-    ]);
+    // First get all matching employees from MongoDB
+    let employees = await Employee.find(filters)
+      .lean();
 
-    return successResponse(employees, 200, {
+    // Apply custom filters in memory
+    if (customFilters.length > 0) {
+      employees = applyFilters(employees, customFilters);
+      employees = applySorting(employees, customFilters);
+    } else {
+      // Apply MongoDB sorting only if no custom filters
+      employees = await Employee.find(filters)
+        .sort(sortQuery)
+        .lean();
+    }
+
+    // Calculate total after filtering
+    const total = employees.length;
+
+    // Apply pagination after filtering
+    const paginatedEmployees = employees.slice(skip, skip + query.limit);
+
+    return successResponse(paginatedEmployees, 200, {
       pagination: {
         page: query.page,
         limit: query.limit,

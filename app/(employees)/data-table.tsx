@@ -30,6 +30,16 @@ interface DataTableProps<TData, TValue> {
   onImport?: (file: File) => void;
   onRefresh?: () => void;
   isLoading?: boolean;
+  pagination?: {
+    page: number;
+    pageSize: number;
+    total: number;
+    pageCount: number;
+  };
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
 }
 
 export function DataTable<TData extends Employee, TValue>({
@@ -40,6 +50,11 @@ export function DataTable<TData extends Employee, TValue>({
   onImport,
   onRefresh,
   isLoading = false,
+  pagination,
+  onPageChange,
+  onPageSizeChange,
+  searchQuery = "",
+  onSearchChange,
 }: DataTableProps<TData, TValue>) {
   const [filterOpen, setFilterOpen] = React.useState(false);
 
@@ -58,6 +73,20 @@ export function DataTable<TData extends Employee, TValue>({
     clearAllFilters,
     hasActiveFilters,
   } = useTableFilters();
+  
+  // Use server-side search if onSearchChange is provided
+  React.useEffect(() => {
+    if (onSearchChange && globalFilter !== searchQuery) {
+      setGlobalFilter(searchQuery);
+    }
+  }, [searchQuery, onSearchChange, setGlobalFilter]);
+  
+  const handleGlobalFilterChange = (value: string) => {
+    setGlobalFilter(value);
+    if (onSearchChange) {
+      onSearchChange(value);
+    }
+  };
 
   const {
     table,
@@ -72,6 +101,9 @@ export function DataTable<TData extends Employee, TValue>({
     columns,
     globalFilter,
     columnFilters,
+    pagination,
+    onPageChange,
+    onPageSizeChange,
   });
 
   // Apply custom filters for salary and rating ranges
@@ -95,7 +127,7 @@ export function DataTable<TData extends Employee, TValue>({
       <div className="flex flex-col gap-4">
         <TableToolbar
           globalFilter={globalFilter}
-          onGlobalFilterChange={setGlobalFilter}
+          onGlobalFilterChange={handleGlobalFilterChange}
           viewPreset={viewPreset}
           onViewPresetChange={setViewPreset}
           filterOpen={filterOpen}

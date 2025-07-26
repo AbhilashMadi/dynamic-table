@@ -18,6 +18,14 @@ interface UseTableStateProps<TData, TValue = any> {
   columns: ColumnDef<TData, TValue>[];
   globalFilter: string;
   columnFilters: any[];
+  pagination?: {
+    page: number;
+    pageSize: number;
+    total: number;
+    pageCount: number;
+  };
+  onPageChange?: (page: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
 }
 
 export function useTableState<TData, TValue = any>({
@@ -25,11 +33,36 @@ export function useTableState<TData, TValue = any>({
   columns,
   globalFilter,
   columnFilters,
+  pagination,
+  onPageChange,
+  onPageSizeChange,
 }: UseTableStateProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [viewPreset, setViewPreset] = useState("default");
+
+  // Use manual pagination if pagination prop is provided
+  const manualPagination = pagination ? {
+    manualPagination: true,
+    pageCount: pagination.pageCount,
+    onPaginationChange: (updater: any) => {
+      if (typeof updater === 'function') {
+        const newPaginationState = updater({
+          pageIndex: pagination.page - 1,
+          pageSize: pagination.pageSize,
+        });
+        
+        if (newPaginationState.pageIndex !== pagination.page - 1 && onPageChange) {
+          onPageChange(newPaginationState.pageIndex + 1);
+        }
+        
+        if (newPaginationState.pageSize !== pagination.pageSize && onPageSizeChange) {
+          onPageSizeChange(newPaginationState.pageSize);
+        }
+      }
+    },
+  } : {};
 
   const table = useReactTable({
     data,
@@ -50,7 +83,14 @@ export function useTableState<TData, TValue = any>({
       columnVisibility,
       rowSelection,
       globalFilter,
+      ...(pagination ? {
+        pagination: {
+          pageIndex: pagination.page - 1,
+          pageSize: pagination.pageSize,
+        },
+      } : {}),
     },
+    ...manualPagination,
   });
 
   useEffect(() => {
@@ -72,7 +112,8 @@ export function useTableState<TData, TValue = any>({
   }, [viewPreset, columns]);
 
   const selectedCount = Object.keys(rowSelection).length;
-  const totalCount = data.length;
+  // Use server-side total if available, otherwise use client-side count
+  const totalCount = pagination?.total || data.length;
 
   return {
     table,
