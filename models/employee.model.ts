@@ -103,13 +103,7 @@ export interface IEmployee extends Document {
  * Interface for Employee model static methods
  */
 export interface IEmployeeModel extends Model<IEmployee> {
-  findByDepartment(department: string): Promise<IEmployee[]>;
-  findActiveEmployees(): Promise<IEmployee[]>;
-  findByManager(managerId: string): Promise<IEmployee[]>;
   generateEmployeeId(): Promise<string>;
-  getAverageSalaryByDepartment(): Promise<
-    Array<{ _id: string; avgSalary: number }>
-  >;
 }
 
 /**
@@ -359,13 +353,13 @@ employeeSchema.statics.generateEmployeeId = async function (): Promise<string> {
   const lastEmployee = await this.findOne().sort("-id").select("id");
 
   if (!lastEmployee) {
-    return "EMP10001";
+    return "EMP001";
   }
 
   const lastNumber = parseInt(lastEmployee.id.substring(3));
   const newNumber = lastNumber + 1;
 
-  return `EMP${newNumber.toString().padStart(5, "0")}`;
+  return `EMP${newNumber.toString().padStart(3, "0")}`;
 };
 
 /**
