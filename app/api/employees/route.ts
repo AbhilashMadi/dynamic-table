@@ -10,20 +10,20 @@ import { z } from "zod";
 
 import { NextRequest } from "next/server";
 
+import { applyFilters, applySorting } from "@/lib/api-filters";
 import {
   ErrorCodes,
   errorResponse,
   handleApiError,
   successResponse,
 } from "@/lib/api-response";
+import { ActiveFilter } from "@/lib/filters";
 import connectDB from "@/lib/mongodb";
 import {
   Employee,
   type EmployeeInput,
   employeeValidationSchema,
 } from "@/models";
-import { applyFilters, applySorting } from "@/lib/api-filters";
-import { ActiveFilter } from "@/lib/filters";
 
 /**
  * Query parameters schema for GET requests
@@ -94,15 +94,14 @@ export async function GET(request: NextRequest) {
       try {
         customFilters = JSON.parse(query.filters) as ActiveFilter[];
       } catch (error) {
-        console.error('Failed to parse custom filters:', error);
+        console.error("Failed to parse custom filters:", error);
       }
     }
 
     const skip = (query.page - 1) * query.limit;
 
     // First get all matching employees from MongoDB
-    let employees = await Employee.find(filters)
-      .lean();
+    let employees = await Employee.find(filters).lean();
 
     // Apply custom filters in memory
     if (customFilters.length > 0) {
@@ -110,9 +109,7 @@ export async function GET(request: NextRequest) {
       employees = applySorting(employees, customFilters);
     } else {
       // Apply MongoDB sorting only if no custom filters
-      employees = await Employee.find(filters)
-        .sort(sortQuery)
-        .lean();
+      employees = await Employee.find(filters).sort(sortQuery).lean();
     }
 
     // Calculate total after filtering

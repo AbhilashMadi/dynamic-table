@@ -73,14 +73,14 @@ export function DataTable<TData extends Employee, TValue>({
     clearAllFilters,
     hasActiveFilters,
   } = useTableFilters();
-  
+
   // Use server-side search if onSearchChange is provided
   React.useEffect(() => {
     if (onSearchChange && globalFilter !== searchQuery) {
       setGlobalFilter(searchQuery);
     }
   }, [searchQuery, onSearchChange, setGlobalFilter]);
-  
+
   const handleGlobalFilterChange = (value: string) => {
     setGlobalFilter(value);
     if (onSearchChange) {

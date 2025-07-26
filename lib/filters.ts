@@ -1,13 +1,19 @@
-export type FilterType = "text" | "number" | "date" | "boolean" | "array" | "select";
+export type FilterType =
+  | "text"
+  | "number"
+  | "date"
+  | "boolean"
+  | "array"
+  | "select";
 
-export type FilterOperator = 
-  | "equals" 
+export type FilterOperator =
+  | "equals"
   | "not_equals"
-  | "contains" 
+  | "contains"
   | "not_contains"
   | "starts_with"
   | "ends_with"
-  | "greater_than" 
+  | "greater_than"
   | "less_than"
   | "greater_than_or_equal"
   | "less_than_or_equal"
@@ -53,17 +59,31 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     description: "Filter by employee first name",
     type: "text",
     field: "firstName",
-    operators: ["equals", "not_equals", "contains", "not_contains", "starts_with", "ends_with"],
-    defaultOperator: "contains"
+    operators: [
+      "equals",
+      "not_equals",
+      "contains",
+      "not_contains",
+      "starts_with",
+      "ends_with",
+    ],
+    defaultOperator: "contains",
   },
   {
     id: "lastName",
-    label: "Last Name", 
+    label: "Last Name",
     description: "Filter by employee last name",
     type: "text",
     field: "lastName",
-    operators: ["equals", "not_equals", "contains", "not_contains", "starts_with", "ends_with"],
-    defaultOperator: "contains"
+    operators: [
+      "equals",
+      "not_equals",
+      "contains",
+      "not_contains",
+      "starts_with",
+      "ends_with",
+    ],
+    defaultOperator: "contains",
   },
   {
     id: "email",
@@ -71,8 +91,15 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     description: "Filter by employee email address",
     type: "text",
     field: "email",
-    operators: ["equals", "not_equals", "contains", "not_contains", "starts_with", "ends_with"],
-    defaultOperator: "contains"
+    operators: [
+      "equals",
+      "not_equals",
+      "contains",
+      "not_contains",
+      "starts_with",
+      "ends_with",
+    ],
+    defaultOperator: "contains",
   },
   {
     id: "phone",
@@ -81,9 +108,9 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "text",
     field: "phone",
     operators: ["equals", "not_equals", "contains", "not_contains"],
-    defaultOperator: "contains"
+    defaultOperator: "contains",
   },
-  
+
   // Work Information
   {
     id: "department",
@@ -93,7 +120,19 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     field: "department",
     operators: ["equals", "not_equals", "in", "not_in"],
     defaultOperator: "equals",
-    options: ["Customer Success", "Marketing", "Operations", "Engineering", "Design", "Legal", "Finance", "HR", "Product", "Security", "Sales"]
+    options: [
+      "Customer Success",
+      "Marketing",
+      "Operations",
+      "Engineering",
+      "Design",
+      "Legal",
+      "Finance",
+      "HR",
+      "Product",
+      "Security",
+      "Sales",
+    ],
   },
   {
     id: "position",
@@ -102,7 +141,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "text",
     field: "position",
     operators: ["equals", "not_equals", "contains", "not_contains"],
-    defaultOperator: "contains"
+    defaultOperator: "contains",
   },
   {
     id: "manager",
@@ -111,7 +150,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "text",
     field: "manager",
     operators: ["equals", "not_equals", "contains", "not_contains"],
-    defaultOperator: "contains"
+    defaultOperator: "contains",
   },
   {
     id: "salary",
@@ -119,8 +158,16 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     description: "Filter by employee salary amount",
     type: "number",
     field: "salary",
-    operators: ["equals", "not_equals", "greater_than", "less_than", "greater_than_or_equal", "less_than_or_equal", "between"],
-    defaultOperator: "greater_than_or_equal"
+    operators: [
+      "equals",
+      "not_equals",
+      "greater_than",
+      "less_than",
+      "greater_than_or_equal",
+      "less_than_or_equal",
+      "between",
+    ],
+    defaultOperator: "greater_than_or_equal",
   },
   {
     id: "startDate",
@@ -129,7 +176,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "date",
     field: "startDate",
     operators: ["equals", "not_equals", "before", "after", "between"],
-    defaultOperator: "after"
+    defaultOperator: "after",
   },
   {
     id: "birthDate",
@@ -138,9 +185,9 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "date",
     field: "birthDate",
     operators: ["equals", "not_equals", "before", "after", "between"],
-    defaultOperator: "before"
+    defaultOperator: "before",
   },
-  
+
   // Location
   {
     id: "city",
@@ -149,7 +196,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "text",
     field: "city",
     operators: ["equals", "not_equals", "contains", "not_contains"],
-    defaultOperator: "equals"
+    defaultOperator: "equals",
   },
   {
     id: "state",
@@ -158,7 +205,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "text",
     field: "state",
     operators: ["equals", "not_equals", "in", "not_in"],
-    defaultOperator: "equals"
+    defaultOperator: "equals",
   },
   {
     id: "country",
@@ -167,7 +214,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "text",
     field: "country",
     operators: ["equals", "not_equals"],
-    defaultOperator: "equals"
+    defaultOperator: "equals",
   },
   {
     id: "zipCode",
@@ -176,9 +223,9 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "text",
     field: "zipCode",
     operators: ["equals", "not_equals", "starts_with"],
-    defaultOperator: "starts_with"
+    defaultOperator: "starts_with",
   },
-  
+
   // Performance & Status
   {
     id: "isActive",
@@ -187,7 +234,7 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "boolean",
     field: "isActive",
     operators: ["is_true", "is_false"],
-    defaultOperator: "is_true"
+    defaultOperator: "is_true",
   },
   {
     id: "performanceRating",
@@ -195,8 +242,16 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     description: "Filter by employee performance rating (1-5)",
     type: "number",
     field: "performanceRating",
-    operators: ["equals", "not_equals", "greater_than", "less_than", "greater_than_or_equal", "less_than_or_equal", "between"],
-    defaultOperator: "greater_than_or_equal"
+    operators: [
+      "equals",
+      "not_equals",
+      "greater_than",
+      "less_than",
+      "greater_than_or_equal",
+      "less_than_or_equal",
+      "between",
+    ],
+    defaultOperator: "greater_than_or_equal",
   },
   {
     id: "projects",
@@ -204,8 +259,16 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     description: "Filter by number of projects assigned",
     type: "number",
     field: "projects",
-    operators: ["equals", "not_equals", "greater_than", "less_than", "greater_than_or_equal", "less_than_or_equal", "between"],
-    defaultOperator: "greater_than_or_equal"
+    operators: [
+      "equals",
+      "not_equals",
+      "greater_than",
+      "less_than",
+      "greater_than_or_equal",
+      "less_than_or_equal",
+      "between",
+    ],
+    defaultOperator: "greater_than_or_equal",
   },
   {
     id: "vacationDays",
@@ -213,8 +276,16 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     description: "Filter by number of vacation days",
     type: "number",
     field: "vacationDays",
-    operators: ["equals", "not_equals", "greater_than", "less_than", "greater_than_or_equal", "less_than_or_equal", "between"],
-    defaultOperator: "greater_than_or_equal"
+    operators: [
+      "equals",
+      "not_equals",
+      "greater_than",
+      "less_than",
+      "greater_than_or_equal",
+      "less_than_or_equal",
+      "between",
+    ],
+    defaultOperator: "greater_than_or_equal",
   },
   {
     id: "skills",
@@ -223,8 +294,8 @@ export const FILTER_DEFINITIONS: FilterDefinition[] = [
     type: "array",
     field: "skills",
     operators: ["contains", "not_contains", "in", "not_in"],
-    defaultOperator: "contains"
-  }
+    defaultOperator: "contains",
+  },
 ];
 
 export const OPERATOR_LABELS: Record<FilterOperator, string> = {
@@ -244,5 +315,5 @@ export const OPERATOR_LABELS: Record<FilterOperator, string> = {
   is_false: "Is False",
   before: "Before",
   after: "After",
-  between: "Between"
+  between: "Between",
 };

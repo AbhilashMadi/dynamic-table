@@ -1,5 +1,25 @@
 "use client";
 
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  closestCenter,
+  useDroppable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
 import { FilterIcon } from "@/components/icons";
 import { ActiveFilterItem } from "@/components/query-builder/active-filter-item";
 import { DraggableFilterItem } from "@/components/query-builder/filter-item";
@@ -15,25 +35,11 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ActiveFilter, FILTER_DEFINITIONS } from "@/lib/filters";
-import { createActiveFilter, getFilterById, logQuery } from "@/lib/query-builder";
 import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  PointerSensor,
-  useDroppable,
-  useSensor,
-  useSensors
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+  createActiveFilter,
+  getFilterById,
+  logQuery,
+} from "@/lib/query-builder";
 
 function ActiveFiltersDroppable({ children }: { children: React.ReactNode }) {
   const { isOver, setNodeRef } = useDroppable({
@@ -43,8 +49,9 @@ function ActiveFiltersDroppable({ children }: { children: React.ReactNode }) {
   return (
     <div
       ref={setNodeRef}
-      className={`min-h-96 p-4 border-2 border-dashed border-muted-foreground/25 rounded-lg transition-colors ${isOver ? "border-primary/50 bg-primary/5" : ""
-        }`}
+      className={`border-muted-foreground/25 min-h-96 rounded-lg border-2 border-dashed p-4 transition-colors ${
+        isOver ? "border-primary/50 bg-primary/5" : ""
+      }`}
     >
       {children}
     </div>
@@ -59,15 +66,15 @@ export default function QueryBuilder() {
 
   useEffect(() => {
     setMounted(true);
-    
+
     // Load filters from localStorage
-    const savedFilters = localStorage.getItem('employeeFilters');
+    const savedFilters = localStorage.getItem("employeeFilters");
     if (savedFilters) {
       try {
         const parsedFilters = JSON.parse(savedFilters) as ActiveFilter[];
         setActiveFilters(parsedFilters);
       } catch (error) {
-        console.error('Failed to parse saved filters:', error);
+        console.error("Failed to parse saved filters:", error);
       }
     }
   }, []);
@@ -96,17 +103,23 @@ export default function QueryBuilder() {
     const overData = over.data.current;
 
     // Handle dropping a filter from available filters to active filters
-    if (activeData?.type === "filter" && over.id === "active-filters-droppable") {
+    if (
+      activeData?.type === "filter" &&
+      over.id === "active-filters-droppable"
+    ) {
       const newFilter = createActiveFilter(activeData.filter.id);
-      setActiveFilters(prev => [...prev, newFilter]);
+      setActiveFilters((prev) => [...prev, newFilter]);
     }
     // Handle reordering active filters
-    else if (activeData?.type === "active-filter" && overData?.type === "active-filter") {
-      const oldIndex = activeFilters.findIndex(f => f.id === active.id);
-      const newIndex = activeFilters.findIndex(f => f.id === over.id);
+    else if (
+      activeData?.type === "active-filter" &&
+      overData?.type === "active-filter"
+    ) {
+      const oldIndex = activeFilters.findIndex((f) => f.id === active.id);
+      const newIndex = activeFilters.findIndex((f) => f.id === over.id);
 
       if (oldIndex !== -1 && newIndex !== -1) {
-        setActiveFilters(prev => arrayMove(prev, oldIndex, newIndex));
+        setActiveFilters((prev) => arrayMove(prev, oldIndex, newIndex));
       }
     }
 
@@ -114,38 +127,38 @@ export default function QueryBuilder() {
   };
 
   const handleFilterUpdate = (updatedFilter: ActiveFilter) => {
-    setActiveFilters(prev =>
-      prev.map(f => f.id === updatedFilter.id ? updatedFilter : f)
+    setActiveFilters((prev) =>
+      prev.map((f) => (f.id === updatedFilter.id ? updatedFilter : f))
     );
   };
 
   const handleFilterRemove = (filterId: string) => {
-    setActiveFilters(prev => prev.filter(f => f.id !== filterId));
+    setActiveFilters((prev) => prev.filter((f) => f.id !== filterId));
   };
 
   const handleApplyFilters = () => {
     // Save filters to localStorage
-    localStorage.setItem('employeeFilters', JSON.stringify(activeFilters));
-    
+    localStorage.setItem("employeeFilters", JSON.stringify(activeFilters));
+
     // Log query for debugging
     logQuery(activeFilters, "payload");
-    
+
     // Close dialog
     setIsOpen(false);
-    
+
     // Reload the page to trigger data refresh with new filters
     window.location.reload();
   };
 
   const handleClearFilters = () => {
     setActiveFilters([]);
-    localStorage.removeItem('employeeFilters');
+    localStorage.removeItem("employeeFilters");
   };
 
   const renderDragOverlay = () => {
     if (!activeId) return null;
 
-    const activeFilter = activeFilters.find(f => f.id === activeId);
+    const activeFilter = activeFilters.find((f) => f.id === activeId);
     if (activeFilter) {
       const filterDef = getFilterById(activeFilter.filterId);
       if (filterDef) {
@@ -154,8 +167,8 @@ export default function QueryBuilder() {
             <ActiveFilterItem
               filter={activeFilter}
               filterDef={filterDef}
-              onUpdate={() => { }}
-              onRemove={() => { }}
+              onUpdate={() => {}}
+              onRemove={() => {}}
               className="shadow-lg"
             />
           </div>
@@ -163,7 +176,9 @@ export default function QueryBuilder() {
       }
     }
 
-    const availableFilter = FILTER_DEFINITIONS.find(f => activeId === `available-${f.id}`);
+    const availableFilter = FILTER_DEFINITIONS.find(
+      (f) => activeId === `available-${f.id}`
+    );
     if (availableFilter) {
       return (
         <div className="cursor-grabbing">
@@ -182,11 +197,12 @@ export default function QueryBuilder() {
           <FilterIcon />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl w-full max-h-[85vh] flex flex-col">
+      <DialogContent className="flex max-h-[85vh] w-full max-w-4xl flex-col">
         <DialogHeader>
           <DialogTitle>Query Builder</DialogTitle>
           <DialogDescription>
-            Drag filters from the left panel to build your query. Reorder and configure filters on the right.
+            Drag filters from the left panel to build your query. Reorder and
+            configure filters on the right.
           </DialogDescription>
         </DialogHeader>
 
@@ -196,10 +212,10 @@ export default function QueryBuilder() {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex gap-6 flex-1 min-h-0">
+          <div className="flex min-h-0 flex-1 gap-6">
             {/* Available Filters Panel */}
             <div className="flex-1">
-              <h3 className="font-semibold mb-3 text-sm">Available Filters</h3>
+              <h3 className="mb-3 text-sm font-semibold">Available Filters</h3>
               <ScrollArea className="h-96 pr-4">
                 <div className="space-y-2">
                   {FILTER_DEFINITIONS.map((filter) => (
@@ -211,8 +227,10 @@ export default function QueryBuilder() {
 
             {/* Active Filters Panel */}
             <div className="flex-1">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-sm">Active Filters ({activeFilters.length})</h3>
+              <div className="mb-3 flex items-center justify-between">
+                <h3 className="text-sm font-semibold">
+                  Active Filters ({activeFilters.length})
+                </h3>
                 {activeFilters.length > 0 && (
                   <Button
                     variant="ghost"
@@ -227,13 +245,13 @@ export default function QueryBuilder() {
 
               <ActiveFiltersDroppable>
                 {activeFilters.length === 0 ? (
-                  <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
+                  <div className="text-muted-foreground flex h-32 items-center justify-center text-sm">
                     Drop filters here to build your query
                   </div>
                 ) : (
                   <ScrollArea className="h-80">
                     <SortableContext
-                      items={activeFilters.map(f => f.id)}
+                      items={activeFilters.map((f) => f.id)}
                       strategy={verticalListSortingStrategy}
                     >
                       <div className="space-y-2">
@@ -259,12 +277,11 @@ export default function QueryBuilder() {
             </div>
           </div>
 
-          {mounted && createPortal(
-            <DragOverlay>
-              {renderDragOverlay()}
-            </DragOverlay>,
-            document.body
-          )}
+          {mounted &&
+            createPortal(
+              <DragOverlay>{renderDragOverlay()}</DragOverlay>,
+              document.body
+            )}
         </DndContext>
 
         <DialogFooter className="mt-6">

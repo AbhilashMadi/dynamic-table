@@ -1,10 +1,15 @@
 "use client";
 
 import { useDraggable } from "@dnd-kit/core";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { FilterDefinition } from "@/lib/filters";
 import { GripVertical, Info } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { FilterDefinition } from "@/lib/filters";
 import { cn } from "@/lib/utils";
 
 interface DraggableFilterItemProps {
@@ -12,37 +17,35 @@ interface DraggableFilterItemProps {
   className?: string;
 }
 
-export function DraggableFilterItem({ filter, className }: DraggableFilterItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging,
-  } = useDraggable({
-    id: `available-${filter.id}`,
-    data: {
-      type: "filter",
-      filter,
-    },
-  });
+export function DraggableFilterItem({
+  filter,
+  className,
+}: DraggableFilterItemProps) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `available-${filter.id}`,
+      data: {
+        type: "filter",
+        filter,
+      },
+    });
 
   return (
     <div
       ref={setNodeRef}
       className={cn(
-        "flex items-center gap-2 p-3 border rounded-md bg-background cursor-grab active:cursor-grabbing transition-colors hover:bg-muted/50",
+        "bg-background hover:bg-muted/50 flex cursor-grab items-center gap-2 rounded-md border p-3 transition-colors active:cursor-grabbing",
         isDragging && "opacity-0",
         className
       )}
       {...listeners}
       {...attributes}
     >
-      <GripVertical className="h-4 w-4 text-muted-foreground" />
-      
-      <div className="flex-1 min-w-0">
-        <div className="font-medium text-sm truncate">{filter.label}</div>
-        <div className="text-xs text-muted-foreground capitalize">
+      <GripVertical className="text-muted-foreground h-4 w-4" />
+
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-medium">{filter.label}</div>
+        <div className="text-muted-foreground text-xs capitalize">
           {filter.type} field
         </div>
       </div>

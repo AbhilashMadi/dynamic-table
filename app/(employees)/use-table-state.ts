@@ -43,26 +43,34 @@ export function useTableState<TData, TValue = any>({
   const [viewPreset, setViewPreset] = useState("default");
 
   // Use manual pagination if pagination prop is provided
-  const manualPagination = pagination ? {
-    manualPagination: true,
-    pageCount: pagination.pageCount,
-    onPaginationChange: (updater: any) => {
-      if (typeof updater === 'function') {
-        const newPaginationState = updater({
-          pageIndex: pagination.page - 1,
-          pageSize: pagination.pageSize,
-        });
-        
-        if (newPaginationState.pageIndex !== pagination.page - 1 && onPageChange) {
-          onPageChange(newPaginationState.pageIndex + 1);
-        }
-        
-        if (newPaginationState.pageSize !== pagination.pageSize && onPageSizeChange) {
-          onPageSizeChange(newPaginationState.pageSize);
-        }
+  const manualPagination = pagination
+    ? {
+        manualPagination: true,
+        pageCount: pagination.pageCount,
+        onPaginationChange: (updater: any) => {
+          if (typeof updater === "function") {
+            const newPaginationState = updater({
+              pageIndex: pagination.page - 1,
+              pageSize: pagination.pageSize,
+            });
+
+            if (
+              newPaginationState.pageIndex !== pagination.page - 1 &&
+              onPageChange
+            ) {
+              onPageChange(newPaginationState.pageIndex + 1);
+            }
+
+            if (
+              newPaginationState.pageSize !== pagination.pageSize &&
+              onPageSizeChange
+            ) {
+              onPageSizeChange(newPaginationState.pageSize);
+            }
+          }
+        },
       }
-    },
-  } : {};
+    : {};
 
   const table = useReactTable({
     data,
@@ -83,12 +91,14 @@ export function useTableState<TData, TValue = any>({
       columnVisibility,
       rowSelection,
       globalFilter,
-      ...(pagination ? {
-        pagination: {
-          pageIndex: pagination.page - 1,
-          pageSize: pagination.pageSize,
-        },
-      } : {}),
+      ...(pagination
+        ? {
+            pagination: {
+              pageIndex: pagination.page - 1,
+              pageSize: pagination.pageSize,
+            },
+          }
+        : {}),
     },
     ...manualPagination,
   });

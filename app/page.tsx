@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { Employee } from "@/schemas/employee-schema";
 
 import { columns } from "./(employees)/columns";
@@ -18,7 +19,7 @@ export default function EmployeesPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const fetchEmployees = async (
-    page: number = 1, 
+    page: number = 1,
     pageSize: number = 10,
     search?: string
   ) => {
@@ -26,7 +27,7 @@ export default function EmployeesPage() {
       setIsLoading(true);
 
       // Get filters from localStorage
-      const savedFilters = localStorage.getItem('employeeFilters');
+      const savedFilters = localStorage.getItem("employeeFilters");
 
       // Build query params
       const params = new URLSearchParams({
@@ -35,13 +36,13 @@ export default function EmployeesPage() {
       });
 
       if (savedFilters) {
-        params.append('filters', savedFilters);
+        params.append("filters", savedFilters);
       }
-      
+
       // Add search query if provided
       const currentSearch = search !== undefined ? search : searchQuery;
       if (currentSearch) {
-        params.append('search', currentSearch);
+        params.append("search", currentSearch);
       }
 
       const response = await fetch(`/api/employees?${params}`);
@@ -49,7 +50,7 @@ export default function EmployeesPage() {
 
       if (data.success) {
         setEmployees(data.data);
-        
+
         // Update pagination from API response
         if (data.meta?.pagination) {
           setPagination({
@@ -60,10 +61,10 @@ export default function EmployeesPage() {
           });
         }
       } else {
-        console.error('Failed to fetch employees:', data.error);
+        console.error("Failed to fetch employees:", data.error);
       }
     } catch (error) {
-      console.error('Error fetching employees:', error);
+      console.error("Error fetching employees:", error);
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +82,7 @@ export default function EmployeesPage() {
     // When page size changes, reset to page 1
     fetchEmployees(1, newPageSize);
   };
-  
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     // Reset to page 1 when searching

@@ -1,4 +1,4 @@
-import { ActiveFilter, FilterOperator, FILTER_DEFINITIONS } from './filters';
+import { ActiveFilter, FilterOperator, FILTER_DEFINITIONS } from "./filters";
 
 export function applyFilters<T extends Record<string, any>>(
   data: T[],
@@ -22,13 +22,13 @@ export function applyFilters<T extends Record<string, any>>(
       }
 
       switch (filter.operator) {
-        case 'equals':
+        case "equals":
           return fieldValue == filterValue;
         
-        case 'not_equals':
+        case "not_equals":
           return fieldValue != filterValue;
         
-        case 'contains':
+        case "contains":
           if (Array.isArray(fieldValue)) {
             return Array.isArray(filterValue) 
               ? filterValue.some(v => fieldValue.includes(v))
@@ -36,7 +36,7 @@ export function applyFilters<T extends Record<string, any>>(
           }
           return String(fieldValue).toLowerCase().includes(String(filterValue).toLowerCase());
         
-        case 'not_contains':
+        case "not_contains":
           if (Array.isArray(fieldValue)) {
             return Array.isArray(filterValue) 
               ? !filterValue.some(v => fieldValue.includes(v))
@@ -44,58 +44,58 @@ export function applyFilters<T extends Record<string, any>>(
           }
           return !String(fieldValue).toLowerCase().includes(String(filterValue).toLowerCase());
         
-        case 'starts_with':
+        case "starts_with":
           return String(fieldValue).toLowerCase().startsWith(String(filterValue).toLowerCase());
         
-        case 'ends_with':
+        case "ends_with":
           return String(fieldValue).toLowerCase().endsWith(String(filterValue).toLowerCase());
         
-        case 'greater_than':
+        case "greater_than":
           return Number(fieldValue) > Number(filterValue);
         
-        case 'less_than':
+        case "less_than":
           return Number(fieldValue) < Number(filterValue);
         
-        case 'greater_than_or_equal':
+        case "greater_than_or_equal":
           return Number(fieldValue) >= Number(filterValue);
         
-        case 'less_than_or_equal':
+        case "less_than_or_equal":
           return Number(fieldValue) <= Number(filterValue);
         
-        case 'in':
+        case "in":
           if (Array.isArray(filterValue)) {
             return filterValue.includes(fieldValue);
           }
           return false;
         
-        case 'not_in':
+        case "not_in":
           if (Array.isArray(filterValue)) {
             return !filterValue.includes(fieldValue);
           }
           return true;
         
-        case 'is_true':
+        case "is_true":
           return fieldValue === true;
         
-        case 'is_false':
+        case "is_false":
           return fieldValue === false;
         
-        case 'before':
+        case "before":
           return new Date(fieldValue) < new Date(filterValue);
         
-        case 'after':
+        case "after":
           return new Date(fieldValue) > new Date(filterValue);
         
-        case 'between':
+        case "between":
           // For between, we expect filterValue to be an array [min, max]
           if (Array.isArray(filterValue) && filterValue.length === 2) {
-            const value = filter.operator === 'between' && (filter.filterId === 'startDate' || filter.filterId === 'birthDate')
+            const value = filter.operator === "between" && (filter.filterId === "startDate" || filter.filterId === "birthDate")
               ? new Date(fieldValue).getTime()
               : Number(fieldValue);
-            const min = filter.operator === 'between' && (filter.filterId === 'startDate' || filter.filterId === 'birthDate')
+            const min = filter.operator === "between" && (filter.filterId === "startDate" || filter.filterId === "birthDate")
               ? new Date(filterValue[0]).getTime()
               : Number(filterValue[0]);
-            const max = filter.operator === 'between' && (filter.filterId === 'startDate' || filter.filterId === 'birthDate')
+            const max = filter.operator === "between" && (filter.filterId === "startDate" || filter.filterId === "birthDate")
               ? new Date(filterValue[1]).getTime()
               : Number(filterValue[1]);
             return value >= min && value <= max;
@@ -134,9 +134,9 @@ export function applySorting<T extends Record<string, any>>(
         comparison = 1;
       } else if (bValue === null || bValue === undefined) {
         comparison = -1;
-      } else if (typeof aValue === 'string' && typeof bValue === 'string') {
+      } else if (typeof aValue === "string" && typeof bValue === "string") {
         comparison = aValue.localeCompare(bValue);
-      } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+      } else if (typeof aValue === "number" && typeof bValue === "number") {
         comparison = aValue - bValue;
       } else if (aValue instanceof Date && bValue instanceof Date) {
         comparison = aValue.getTime() - bValue.getTime();
@@ -145,7 +145,7 @@ export function applySorting<T extends Record<string, any>>(
       }
       
       if (comparison !== 0) {
-        return filter.sortOrder === 'desc' ? -comparison : comparison;
+        return filter.sortOrder === "desc" ? -comparison : comparison;
       }
     }
     
@@ -159,7 +159,7 @@ export function parseFiltersFromQuery(query: string | null): ActiveFilter[] {
   try {
     return JSON.parse(query) as ActiveFilter[];
   } catch (error) {
-    console.error('Failed to parse filters from query:', error);
+    console.error("Failed to parse filters from query:", error);
     return [];
   }
 }

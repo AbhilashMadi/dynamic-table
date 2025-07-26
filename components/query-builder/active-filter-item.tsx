@@ -2,12 +2,23 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { ArrowDown, ArrowUp, GripVertical, X } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ActiveFilter, FilterDefinition, OPERATOR_LABELS } from "@/lib/filters";
-import { GripVertical, X, ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ActiveFilterItemProps {
@@ -18,12 +29,12 @@ interface ActiveFilterItemProps {
   className?: string;
 }
 
-export function ActiveFilterItem({ 
-  filter, 
-  filterDef, 
-  onUpdate, 
+export function ActiveFilterItem({
+  filter,
+  filterDef,
+  onUpdate,
   onRemove,
-  className 
+  className,
 }: ActiveFilterItemProps) {
   const {
     attributes,
@@ -78,7 +89,7 @@ export function ActiveFilterItem({
             className="w-32"
           />
         );
-      
+
       case "date":
         return (
           <Input
@@ -88,10 +99,13 @@ export function ActiveFilterItem({
             className="w-40"
           />
         );
-      
+
       case "boolean":
         return (
-          <Select value={filter.value ? "true" : "false"} onValueChange={(value) => handleValueChange(value === "true")}>
+          <Select
+            value={filter.value ? "true" : "false"}
+            onValueChange={(value) => handleValueChange(value === "true")}
+          >
             <SelectTrigger className="w-24">
               <SelectValue />
             </SelectTrigger>
@@ -101,10 +115,13 @@ export function ActiveFilterItem({
             </SelectContent>
           </Select>
         );
-      
+
       case "select":
         return (
-          <Select value={filter.value?.toString() || ""} onValueChange={handleValueChange}>
+          <Select
+            value={filter.value?.toString() || ""}
+            onValueChange={handleValueChange}
+          >
             <SelectTrigger className="w-40">
               <SelectValue placeholder="Select..." />
             </SelectTrigger>
@@ -117,20 +134,28 @@ export function ActiveFilterItem({
             </SelectContent>
           </Select>
         );
-      
+
       case "array":
         return (
           <Input
-            value={Array.isArray(filter.value) ? filter.value.join(", ") : filter.value?.toString() || ""}
+            value={
+              Array.isArray(filter.value)
+                ? filter.value.join(", ")
+                : filter.value?.toString() || ""
+            }
             onChange={(e) => {
               const value = e.target.value;
-              handleValueChange(value.includes(",") ? value.split(",").map(v => v.trim()) : value);
+              handleValueChange(
+                value.includes(",")
+                  ? value.split(",").map((v) => v.trim())
+                  : value
+              );
             }}
             placeholder="Enter values (comma-separated)"
             className="w-48"
           />
         );
-      
+
       default:
         return (
           <Input
@@ -148,8 +173,8 @@ export function ActiveFilterItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center gap-2 p-3 border rounded-md bg-background",
-        isDragging && "opacity-50 shadow-lg z-10",
+        "bg-background flex items-center gap-2 rounded-md border p-3",
+        isDragging && "z-10 opacity-50 shadow-lg",
         className
       )}
     >
@@ -158,11 +183,11 @@ export function ActiveFilterItem({
         {...listeners}
         className="cursor-grab active:cursor-grabbing"
       >
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
+        <GripVertical className="text-muted-foreground h-4 w-4" />
       </div>
 
-      <div className="flex-1 flex items-center gap-2 flex-wrap">
-        <div className="font-medium text-sm min-w-0 shrink-0">
+      <div className="flex flex-1 flex-wrap items-center gap-2">
+        <div className="min-w-0 shrink-0 text-sm font-medium">
           {filterDef.label}
         </div>
 
@@ -179,7 +204,8 @@ export function ActiveFilterItem({
           </SelectContent>
         </Select>
 
-        {!["is_true", "is_false"].includes(filter.operator) && renderValueInput()}
+        {!["is_true", "is_false"].includes(filter.operator) &&
+          renderValueInput()}
       </div>
 
       <div className="flex items-center gap-1">
@@ -189,7 +215,9 @@ export function ActiveFilterItem({
               variant={filter.sortOrder === "asc" ? "default" : "ghost"}
               size="sm"
               className="h-7 w-7 p-0"
-              onClick={() => handleSortChange(filter.sortOrder === "asc" ? undefined : "asc")}
+              onClick={() =>
+                handleSortChange(filter.sortOrder === "asc" ? undefined : "asc")
+              }
             >
               <ArrowUp className="h-3 w-3" />
             </Button>
@@ -203,7 +231,11 @@ export function ActiveFilterItem({
               variant={filter.sortOrder === "desc" ? "default" : "ghost"}
               size="sm"
               className="h-7 w-7 p-0"
-              onClick={() => handleSortChange(filter.sortOrder === "desc" ? undefined : "desc")}
+              onClick={() =>
+                handleSortChange(
+                  filter.sortOrder === "desc" ? undefined : "desc"
+                )
+              }
             >
               <ArrowDown className="h-3 w-3" />
             </Button>
@@ -216,7 +248,7 @@ export function ActiveFilterItem({
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+              className="text-destructive hover:text-destructive h-7 w-7 p-0"
               onClick={() => onRemove(filter.id)}
             >
               <X className="h-3 w-3" />

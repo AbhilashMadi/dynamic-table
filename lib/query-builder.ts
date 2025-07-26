@@ -1,4 +1,9 @@
-import { ActiveFilter, QueryFilter, FilterDefinition, FILTER_DEFINITIONS } from "./filters";
+import {
+  ActiveFilter,
+  FILTER_DEFINITIONS,
+  FilterDefinition,
+  QueryFilter,
+} from "./filters";
 
 export interface GeneratedQuery {
   filters: QueryFilter[];
@@ -22,7 +27,9 @@ export function generateQuery(activeFilters: ActiveFilter[]): GeneratedQuery {
   const sortFields: Array<{ field: string; order: "asc" | "desc" }> = [];
 
   activeFilters.forEach((activeFilter) => {
-    const filterDef = FILTER_DEFINITIONS.find(def => def.id === activeFilter.filterId);
+    const filterDef = FILTER_DEFINITIONS.find(
+      (def) => def.id === activeFilter.filterId
+    );
     if (!filterDef) return;
 
     // Add filter
@@ -30,14 +37,14 @@ export function generateQuery(activeFilters: ActiveFilter[]): GeneratedQuery {
       field: filterDef.field,
       operator: activeFilter.operator,
       value: activeFilter.value,
-      sortOrder: activeFilter.sortOrder
+      sortOrder: activeFilter.sortOrder,
     });
 
     // Add sort if specified
     if (activeFilter.sortOrder) {
       sortFields.push({
         field: filterDef.field,
-        order: activeFilter.sortOrder
+        order: activeFilter.sortOrder,
       });
     }
   });
@@ -50,18 +57,22 @@ export function generateQuery(activeFilters: ActiveFilter[]): GeneratedQuery {
   return query;
 }
 
-export function generateQueryParams(activeFilters: ActiveFilter[]): QueryParams {
+export function generateQueryParams(
+  activeFilters: ActiveFilter[]
+): QueryParams {
   const params: QueryParams = {};
 
   activeFilters.forEach((activeFilter, index) => {
-    const filterDef = FILTER_DEFINITIONS.find(def => def.id === activeFilter.filterId);
+    const filterDef = FILTER_DEFINITIONS.find(
+      (def) => def.id === activeFilter.filterId
+    );
     if (!filterDef) return;
 
     const prefix = `filter_${index}`;
     params[`${prefix}_field`] = filterDef.field;
     params[`${prefix}_operator`] = activeFilter.operator;
     params[`${prefix}_value`] = String(activeFilter.value);
-    
+
     if (activeFilter.sortOrder) {
       params[`${prefix}_sort`] = activeFilter.sortOrder;
     }
@@ -70,14 +81,19 @@ export function generateQueryParams(activeFilters: ActiveFilter[]): QueryParams 
   return params;
 }
 
-export function generateQueryPayload(activeFilters: ActiveFilter[]): QueryPayload {
+export function generateQueryPayload(
+  activeFilters: ActiveFilter[]
+): QueryPayload {
   return {
     query: generateQuery(activeFilters),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 }
 
-export function validateFilterValue(filter: ActiveFilter, filterDef: FilterDefinition): boolean {
+export function validateFilterValue(
+  filter: ActiveFilter,
+  filterDef: FilterDefinition
+): boolean {
   if (!filter.value && filter.value !== 0 && filter.value !== false) {
     return false;
   }
@@ -85,16 +101,16 @@ export function validateFilterValue(filter: ActiveFilter, filterDef: FilterDefin
   switch (filterDef.type) {
     case "number":
       return !isNaN(Number(filter.value));
-    
+
     case "date":
       return !isNaN(Date.parse(filter.value));
-    
+
     case "boolean":
       return typeof filter.value === "boolean";
-    
+
     case "array":
       return Array.isArray(filter.value) || typeof filter.value === "string";
-    
+
     case "text":
     case "select":
     default:
@@ -103,7 +119,7 @@ export function validateFilterValue(filter: ActiveFilter, filterDef: FilterDefin
 }
 
 export function getFilterById(filterId: string): FilterDefinition | undefined {
-  return FILTER_DEFINITIONS.find(def => def.id === filterId);
+  return FILTER_DEFINITIONS.find((def) => def.id === filterId);
 }
 
 export function createActiveFilter(filterId: string): ActiveFilter {
@@ -117,11 +133,13 @@ export function createActiveFilter(filterId: string): ActiveFilter {
     filterId,
     operator: filterDef.defaultOperator,
     value: getDefaultValueForType(filterDef.type),
-    sortOrder: undefined
+    sortOrder: undefined,
   };
 }
 
-function getDefaultValueForType(type: string): string | number | boolean | string[] {
+function getDefaultValueForType(
+  type: string
+): string | number | boolean | string[] {
   switch (type) {
     case "number":
       return 0;
@@ -138,9 +156,12 @@ function getDefaultValueForType(type: string): string | number | boolean | strin
   }
 }
 
-export function logQuery(activeFilters: ActiveFilter[], format: "params" | "payload" = "payload"): void {
+export function logQuery(
+  activeFilters: ActiveFilter[],
+  format: "params" | "payload" = "payload"
+): void {
   console.group("🔍 Query Builder Output");
-  
+
   if (format === "params") {
     const params = generateQueryParams(activeFilters);
     console.log("Query Parameters:", params);
@@ -148,7 +169,7 @@ export function logQuery(activeFilters: ActiveFilter[], format: "params" | "payl
     const payload = generateQueryPayload(activeFilters);
     console.log("Query Payload:", payload);
   }
-  
+
   console.log("Active Filters:", activeFilters);
   console.groupEnd();
 }

@@ -1,18 +1,16 @@
 "use client";
 
-import {
-  ChevronDown,
-  Download,
-  Plus,
-  Settings2,
-  Upload
-} from "lucide-react";
+import { ChevronDown, Download, Plus, Settings2, Upload } from "lucide-react";
 
 import { useEffect, useState } from "react";
 
 import { useTheme } from "next-themes";
 
-import RestoreIcon, { MoonIcon, SpinnerIcon, SunIcon } from "@/components/icons";
+import RestoreIcon, {
+  MoonIcon,
+  SpinnerIcon,
+  SunIcon,
+} from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -195,7 +193,8 @@ export function TableToolbar({
             variant="outline"
             size="sm"
             onClick={onRefresh}
-            disabled={isLoading}>
+            disabled={isLoading}
+          >
             {isLoading && <SpinnerIcon />}
             Refresh
           </Button>
