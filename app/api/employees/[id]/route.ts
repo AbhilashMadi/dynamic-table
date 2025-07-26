@@ -35,17 +35,17 @@ const paramsSchema = z.object({
  * GET /api/employees/[id]
  * Retrieve a single employee by ID
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
   return withCors(request, async () => {
     try {
       await connectDB();
 
-      const { id } = paramsSchema.parse(params);
+      const { searchParams } = new URL(request.url);
+      const id = searchParams.get("id");
 
-      const employee = await Employee.findOne({ id }).lean();
+      const { id: parsedId } = paramsSchema.parse({ id });
+
+      const employee = await Employee.findOne({ id: parsedId }).lean();
 
       if (!employee) {
         return errorResponse("Employee not found", 404, ErrorCodes.NOT_FOUND);
@@ -62,15 +62,13 @@ export async function GET(
  * PUT /api/employees/[id]
  * Update a single employee completely
  */
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest) {
   return withCors(request, async () => {
     try {
       await connectDB();
+      const params = new URLSearchParams(request.url);
 
-      const { id } = paramsSchema.parse(params);
+      const { id } = paramsSchema.parse({ id: params.get("id") });
       const body = await request.json();
 
       // Validate the entire employee data
@@ -106,15 +104,14 @@ export async function PUT(
  * PATCH /api/employees/[id]
  * Partially update a single employee
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest) {
   return withCors(request, async () => {
     try {
       await connectDB();
 
-      const { id } = paramsSchema.parse(params);
+      const params = new URLSearchParams(request.url);
+
+      const { id } = paramsSchema.parse({ id: params.get("id") });
       const body = await request.json();
 
       // Validate partial data
@@ -144,19 +141,17 @@ export async function PATCH(
  * DELETE /api/employees/[id]
  * Delete a single employee (soft delete by default)
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   return withCors(request, async () => {
     try {
       await connectDB();
 
-      const { id } = paramsSchema.parse(params);
+      const params = new URLSearchParams(request.url);
+      const { id } = paramsSchema.parse({ id: params.get("id") });
 
       // Check query parameters for permanent deletion
       const url = new URL(request.url);
-      const permanent = url.searchParams.get("permanent") === "true";
+      const permanent = params.get("permanent") === "true";
 
       let result;
       if (permanent) {

@@ -103,7 +103,7 @@ export function validateFilterValue(
       return !isNaN(Number(filter.value));
 
     case "date":
-      return !isNaN(Date.parse(filter.value));
+      return !isNaN(Date.parse(filter.value as string));
 
     case "boolean":
       return typeof filter.value === "boolean";
