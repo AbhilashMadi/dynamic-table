@@ -11,6 +11,7 @@ import { z } from "zod";
 import { NextRequest } from "next/server";
 
 import { ErrorCodes, errorResponse, handleApiError } from "@/lib/api-response";
+import { withCors } from "@/lib/cors";
 import connectDB from "@/lib/mongodb";
 import { Employee } from "@/models";
 
@@ -31,66 +32,68 @@ const exportQuerySchema = z.object({
  * Export employee data in specified format
  */
 export async function GET(request: NextRequest) {
-  try {
-    await connectDB();
+  return withCors(request, async () => {
+    try {
+      await connectDB();
 
-    // Parse and validate query parameters
-    const url = new URL(request.url);
-    const queryParams = Object.fromEntries(url.searchParams.entries());
-    const query = exportQuerySchema.parse(queryParams);
+      // Parse and validate query parameters
+      const url = new URL(request.url);
+      const queryParams = Object.fromEntries(url.searchParams.entries());
+      const query = exportQuerySchema.parse(queryParams);
 
-    // Build filters
-    const filters: any = {};
-    if (query.department) filters.department = query.department;
-    if (query.isActive !== undefined) filters.isActive = query.isActive;
-    if (query.minSalary || query.maxSalary) {
-      filters.salary = {};
-      if (query.minSalary) filters.salary.$gte = query.minSalary;
-      if (query.maxSalary) filters.salary.$lte = query.maxSalary;
-    }
+      // Build filters
+      const filters: any = {};
+      if (query.department) filters.department = query.department;
+      if (query.isActive !== undefined) filters.isActive = query.isActive;
+      if (query.minSalary || query.maxSalary) {
+        filters.salary = {};
+        if (query.minSalary) filters.salary.$gte = query.minSalary;
+        if (query.maxSalary) filters.salary.$lte = query.maxSalary;
+      }
 
-    // Parse fields if provided
-    const selectedFields = query.fields
-      ? query.fields.split(",").map((f) => f.trim())
-      : null;
+      // Parse fields if provided
+      const selectedFields = query.fields
+        ? query.fields.split(",").map((f) => f.trim())
+        : null;
 
-    // Fetch data
-    let employeesQuery = Employee.find(filters);
+      // Fetch data
+      let employeesQuery = Employee.find(filters);
 
-    // Apply field selection if specified
-    if (selectedFields) {
-      const projection = selectedFields.reduce((acc, field) => {
-        acc[field] = 1;
-        return acc;
-      }, {} as any);
-      employeesQuery = employeesQuery.select(projection);
-    }
+      // Apply field selection if specified
+      if (selectedFields) {
+        const projection = selectedFields.reduce((acc, field) => {
+          acc[field] = 1;
+          return acc;
+        }, {} as any);
+        employeesQuery = employeesQuery.select(projection);
+      }
 
-    const employees = (await employeesQuery.lean()) as any[];
+      const employees = (await employeesQuery.lean()) as any[];
 
-    if (query.format === "csv") {
-      const csvData = convertToCSV(employees, selectedFields);
+      if (query.format === "csv") {
+        const csvData = convertToCSV(employees, selectedFields);
 
-      return new Response(csvData, {
+        return new Response(csvData, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/csv",
+            "Content-Disposition": `attachment; filename="employees-${new Date().toISOString().split("T")[0]}.csv"`,
+          },
+        });
+      }
+
+      // JSON format
+      return new Response(JSON.stringify(employees, null, 2), {
         status: 200,
         headers: {
-          "Content-Type": "text/csv",
-          "Content-Disposition": `attachment; filename="employees-${new Date().toISOString().split("T")[0]}.csv"`,
+          "Content-Type": "application/json",
+          "Content-Disposition": `attachment; filename="employees-${new Date().toISOString().split("T")[0]}.json"`,
         },
       });
+    } catch (error) {
+      return handleApiError(error);
     }
-
-    // JSON format
-    return new Response(JSON.stringify(employees, null, 2), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Content-Disposition": `attachment; filename="employees-${new Date().toISOString().split("T")[0]}.json"`,
-      },
-    });
-  } catch (error) {
-    return handleApiError(error);
-  }
+  });
 }
 
 /**
@@ -147,64 +150,66 @@ function convertToCSV(
  * Export specific employees by IDs
  */
 export async function POST(request: NextRequest) {
-  try {
-    await connectDB();
+  return withCors(request, async () => {
+    try {
+      await connectDB();
 
-    const body = await request.json();
-    const { ids, format = "json", fields } = body;
+      const body = await request.json();
+      const { ids, format = "json", fields } = body;
 
-    if (!Array.isArray(ids) || ids.length === 0) {
-      return errorResponse(
-        "Export requires an array of employee IDs",
-        400,
-        ErrorCodes.VALIDATION_ERROR
-      );
-    }
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return errorResponse(
+          "Export requires an array of employee IDs",
+          400,
+          ErrorCodes.VALIDATION_ERROR
+        );
+      }
 
-    // Validate format
-    if (!["json", "csv"].includes(format)) {
-      return errorResponse(
-        "Format must be either \"json\" or \"csv\"",
-        400,
-        ErrorCodes.VALIDATION_ERROR
-      );
-    }
+      // Validate format
+      if (!["json", "csv"].includes(format)) {
+        return errorResponse(
+          "Format must be either \"json\" or \"csv\"",
+          400,
+          ErrorCodes.VALIDATION_ERROR
+        );
+      }
 
-    // Fetch specific employees
-    let employeeQuery = Employee.find({ id: { $in: ids } });
+      // Fetch specific employees
+      let employeeQuery = Employee.find({ id: { $in: ids } });
 
-    // Apply field selection if specified
-    if (fields && Array.isArray(fields)) {
-      const projection = fields.reduce((acc, field) => {
-        acc[field] = 1;
-        return acc;
-      }, {} as any);
-      employeeQuery = employeeQuery.select(projection);
-    }
+      // Apply field selection if specified
+      if (fields && Array.isArray(fields)) {
+        const projection = fields.reduce((acc, field) => {
+          acc[field] = 1;
+          return acc;
+        }, {} as any);
+        employeeQuery = employeeQuery.select(projection);
+      }
 
-    const employees = (await employeeQuery.lean()) as any[];
+      const employees = (await employeeQuery.lean()) as any[];
 
-    if (format === "csv") {
-      const csvData = convertToCSV(employees, fields);
+      if (format === "csv") {
+        const csvData = convertToCSV(employees, fields);
 
-      return new Response(csvData, {
+        return new Response(csvData, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/csv",
+            "Content-Disposition": `attachment; filename="selected-employees-${new Date().toISOString().split("T")[0]}.csv"`,
+          },
+        });
+      }
+
+      // JSON format
+      return new Response(JSON.stringify(employees, null, 2), {
         status: 200,
         headers: {
-          "Content-Type": "text/csv",
-          "Content-Disposition": `attachment; filename="selected-employees-${new Date().toISOString().split("T")[0]}.csv"`,
+          "Content-Type": "application/json",
+          "Content-Disposition": `attachment; filename="selected-employees-${new Date().toISOString().split("T")[0]}.json"`,
         },
       });
+    } catch (error) {
+      return handleApiError(error);
     }
-
-    // JSON format
-    return new Response(JSON.stringify(employees, null, 2), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Content-Disposition": `attachment; filename="selected-employees-${new Date().toISOString().split("T")[0]}.json"`,
-      },
-    });
-  } catch (error) {
-    return handleApiError(error);
-  }
+  });
 }
