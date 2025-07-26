@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useDebounce } from "@/lib/use-debounce";
 import { Employee } from "@/schemas/employee-schema";
 
 import { columns } from "./(employees)/columns";
@@ -17,6 +18,7 @@ export default function EmployeesPage() {
     pageCount: 0,
   });
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const fetchEmployees = async (
     page: number = 1,
@@ -40,9 +42,8 @@ export default function EmployeesPage() {
       }
 
       // Add search query if provided
-      const currentSearch = search !== undefined ? search : searchQuery;
-      if (currentSearch) {
-        params.append("search", currentSearch);
+      if (search) {
+        params.append("search", search);
       }
 
       const response = await fetch(`/api/employees?${params}`);
@@ -74,19 +75,23 @@ export default function EmployeesPage() {
     fetchEmployees(pagination.page, pagination.pageSize);
   }, []);
 
+  useEffect(() => {
+    if (debouncedSearchQuery !== undefined) {
+      fetchEmployees(1, pagination.pageSize, debouncedSearchQuery);
+    }
+  }, [debouncedSearchQuery]);
+
   const handlePageChange = (newPage: number) => {
-    fetchEmployees(newPage, pagination.pageSize);
+    fetchEmployees(newPage, pagination.pageSize, debouncedSearchQuery);
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
     // When page size changes, reset to page 1
-    fetchEmployees(1, newPageSize);
+    fetchEmployees(1, newPageSize, debouncedSearchQuery);
   };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    // Reset to page 1 when searching
-    fetchEmployees(1, pagination.pageSize, query);
   };
 
   return (
@@ -97,7 +102,13 @@ export default function EmployeesPage() {
         onAddNew={() => console.log("Add new employee")}
         onExport={(format) => console.log(`Export as ${format}`)}
         onImport={(file) => console.log("Import file:", file.name)}
-        onRefresh={() => fetchEmployees(pagination.page, pagination.pageSize)}
+        onRefresh={() =>
+          fetchEmployees(
+            pagination.page,
+            pagination.pageSize,
+            debouncedSearchQuery
+          )
+        }
         isLoading={isLoading}
         pagination={pagination}
         onPageChange={handlePageChange}

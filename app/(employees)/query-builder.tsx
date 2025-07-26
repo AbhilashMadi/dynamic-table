@@ -153,6 +153,8 @@ export default function QueryBuilder() {
   const handleClearFilters = () => {
     setActiveFilters([]);
     localStorage.removeItem("employeeFilters");
+    // Trigger data refresh not a good practice but for now leave it 😅
+    window.location.reload();
   };
 
   const renderDragOverlay = () => {
