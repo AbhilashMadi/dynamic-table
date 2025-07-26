@@ -130,23 +130,12 @@ export function DataTable<TData extends Employee, TValue>({
           onGlobalFilterChange={handleGlobalFilterChange}
           viewPreset={viewPreset}
           onViewPresetChange={setViewPreset}
-          filterOpen={filterOpen}
-          onFilterOpenChange={setFilterOpen}
           table={table}
           onAddNew={onAddNew}
           onExport={onExport}
           onImport={onImport}
           onRefresh={onRefresh}
           isLoading={isLoading}
-          departmentFilter={departmentFilter}
-          onDepartmentFilterChange={setDepartmentFilter}
-          statusFilter={statusFilter}
-          onStatusFilterChange={setStatusFilter}
-          salaryRange={salaryRange}
-          onSalaryRangeChange={setSalaryRange}
-          ratingRange={ratingRange}
-          onRatingRangeChange={setRatingRange}
-          onClearAllFilters={clearAllFilters}
         />
 
         <SelectionBar
